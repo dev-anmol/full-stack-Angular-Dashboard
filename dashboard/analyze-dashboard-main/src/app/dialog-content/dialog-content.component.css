@@ -1,0 +1,128 @@
+.custom-dialog{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 700px;
+    height: 50%;
+}
+
+.cdk-global-overlay-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.top-row label{
+    display: inline-block;
+    height: fit-content;
+}
+
+mat-dialog-content{
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#addBtn{
+    appearance: none;
+    height: 40px;
+    background-color: transparent;
+    border: 0.125em solid #1A1A1A;
+    border-radius: 0.9375em;
+    box-sizing: border-box;
+    color: #3B3B3B;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    min-width: 0;
+    outline: none;
+    padding: 0 2rem;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+   }
+   
+   #addBtn:disabled {
+    pointer-events: none;
+   }
+   
+   #addBtn:hover {
+    color: #fff;
+    background-color: #1A1A1A;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+   }
+   
+   #addBtn:active {
+    box-shadow: none;
+    transform: translateY(0);
+   }
+
+#cancelBtn {
+    width: 150px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    background: red;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    background: #e62222;
+   }
+   
+   #cancelBtn, #cancelBtn span {
+    transition: 200ms;
+   }
+   
+   #cancelBtn .text {
+    transform: translateX(35px);
+    color: white;
+    font-weight: bold;
+   }
+   
+   #cancelBtn .icon {
+    position: absolute;
+    border-left: 1px solid #c41b1b;
+    transform: translateX(110px);
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   }
+   
+   #cancelBtn svg {
+    width: 15px;
+    fill: #eee;
+   }
+   
+   #cancelBtn:hover {
+    background: #ff3636;
+   }
+   
+   #cancelBtn:hover .text {
+    color: transparent;
+   }
+   
+   #cancelBtn:hover .icon {
+    width: 150px;
+    border-left: none;
+    transform: translateX(0);
+   }
+   
+   #cancelBtn:focus {
+    outline: none;
+   }
+   
+   #cancelBtn:active .icon svg {
+    transform: scale(0.8);
+   }

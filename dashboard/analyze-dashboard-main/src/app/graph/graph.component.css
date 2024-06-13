@@ -1,0 +1,128 @@
+.custom-graph-topbar {
+  justify-content: center;
+  align-items: center;
+  column-gap: 1.5rem;
+  margin-top: 2%;
+}
+
+.custom-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.custom-graph-topbar input {
+  border: none;
+  padding: 8px;
+  border-radius: 3%;
+}
+
+.error-handler {
+  position: absolute;
+  top: 45%;
+  left: 43%;
+}
+
+#drone {
+  animation: myDrone 3s linear infinite;
+  transform-origin: bottom;
+  transform-box: fill-box;
+}
+
+@keyframes myDrone {
+  from {
+    translate: 0 1rem;
+    scale: .8;
+  }
+
+  to {
+    translate: 0 -1rem;
+    scale: .5;
+  }
+}
+
+.error-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#vega-chart {
+  align-self: flex-end;
+}
+
+.custom-graph {
+  justify-content: flex-end;
+  margin-top: 3%;
+  margin-right: 4%;
+}
+
+.row1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.row1 p {
+  width: 70%;
+  text-align: center;
+}
+
+.date-range {
+  text-align: center;
+  display: inline-block;
+  height: fit-content;
+  position: relative;
+  top: 5px;
+}
+
+.dates-label {
+  position: relative;
+  text-align: center;
+  display: inline-block;
+  height: fit-content;
+  top: 5px;
+}
+
+
+#addBtn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #212529;
+  border-radius: 9999px;
+  background-color: #212529;
+  padding: 0.3rem 1.0rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 1);
+  outline: 0;
+  transition: all  .2s ease;
+  text-decoration: none;
+}
+
+#addBtn:hover {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 1);
+}
+
+.btn-container button:hover{
+  background-color: #abaeb0;
+}
+
+.vega-container{
+  position: relative;
+  width: 100%;
+}
+.btn-container button{
+  position: absolute;
+  top: 10px;
+  right: 50px;
+  display: none;
+  z-index: 10;
+  transition: opacity 0.3s ease;
+  background-color: #e6e8ea;
+}
+.vega-container:hover button{
+  display: block;
+}

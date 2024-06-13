@@ -1,0 +1,29 @@
+.custom-header{
+    color: white;
+    margin-top: 20px;
+}
+.pl-custom{
+    width: 40px;
+    height: fit-content;
+    padding-top: 5px;
+    padding-left: 30px;
+}
+
+.custom-list {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+  .custom-list::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition: width 0.3s ease-in-out;
+  }
+  .custom-list:hover::after {
+    width: 95%;
+  }

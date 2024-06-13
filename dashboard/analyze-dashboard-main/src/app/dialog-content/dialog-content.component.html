@@ -1,0 +1,178 @@
+<div class="container-fluid custom-dialog modal-content">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 mat-dialog-title>Add</h2>
+    </div>
+    <mat-dialog-content class="mat-typography p-2 m-lg-2">
+
+      <div class="row top-row">
+        <div class="col-sm-3 d-flex align-content-center">
+          <input type="radio" class="form-check-input m-lg-2" name="select" id="Parameter"
+            (click)="changeValue($event, 'Parameter')" checked>
+          <label for="Parameter" class="p-1">Parameter</label>
+        </div>
+        <div class="col-sm-3 d-flex align-content-center">
+          <input type="radio" class="form-check-input m-lg-2" name="select" id="Benchmark"
+            (click)="changeValue($event, 'Benchmark')">
+          <label for="Benchmark" class="p-1">Benchmark Comparison</label>
+        </div>
+        <div class="col-sm-3 d-flex align-content-center">
+          <input type="radio" class="form-check-input m-lg-2" id="Spend" name="select"
+            (click)="changeValue($event, 'Spend')">
+          <label for="Spend" class="p-1">Spend</label>
+        </div>
+        <div class="col-sm-3 d-flex align-content-center">
+          <input type="radio" class="form-check-input m-lg-2" id="KPI" name="select"
+            (click)="changeValue($event, 'KPI')">
+          <label for="KPI" class="p-1">KPI</label>
+        </div>
+      </div>
+
+      @if(radioValue=='Parameter'){
+      <div class="col-sm-12">
+        <div class="col-sm-12">
+          <label>Facility</label>
+          <select class="form-select" [(ngModel)]="PFacility" (change)="updateFormData('PFacility', PFacility)">
+            <option value="" class="" selected="selected">Select</option>
+            <option label="Test Facility" value="number:1">Test Facility</option>
+          </select>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <label>Device</label>
+          <select class="form-select" [(ngModel)]="PDevice" (change)="updateFormData('PDevice', PDevice)">
+            <option value="" class="" selected="selected">Select</option>
+            <input type="text" class="form-check-input">
+          </select>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <label>Parameter</label>
+          <ng-multiselect-dropdown placeholder="select Parameter" [settings]="dropdownsettings" [data]="finalParameters"
+            [(ngModel)]='selectedParameter' (ngModelChange)="updateFormData('selectedParameter',$event)">
+          </ng-multiselect-dropdown>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <label>Graph Type</label>
+          <select class="form-select" [(ngModel)]="PGraphType" (change)="updateFormData('PgraphType', PGraphType)">
+            <option value="" class="form-select" style="display: none;" selected="selected">Select</option>
+            <option value="Line">Line</option>
+            <option value="Area">Area</option>
+            <option value="Bar">Bar</option>
+            <option value="Pie">Pie</option>
+            <option value="Donut">Donut</option>
+            <option value="Heatmap">Heatmap</option>
+          </select>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <label for="">Plot Axis</label>
+          <select name="" id="" class="form-select" [(ngModel)]="PPlotAxis"
+            (change)="updateFormData('PplotAxis', PPlotAxis)">
+            <option value="" style="display:none;" class="" selected="selected">Select</option>
+            <option value="Primary Y (Y1)">Primary Y (Y1)</option>
+            <option value="Secondary Y (Y2)">Secondary Y (Y2)</option>
+          </select>
+        </div>
+      </div>
+      }@else if (radioValue==='Benchmark') {
+      <div class="col-sm-12">
+        <div class="col-sm-12">
+          <label>Facility</label>
+          <select class="form-select" [(ngModel)]="BFacility" (change)="updateFormData('BFacility', BFacility)">
+            <option value="" class="" style="display: none;" selected="selected">Select</option>
+            <option label="Test Facility" value="number:1">Test Facility</option>
+          </select>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <label>Device</label>
+          <select class="form-select" [(ngModel)]="BDevice" (change)="updateFormData('BDevice', BDevice)">
+            <option value="" class="" style="display: none;" selected="selected">Select</option>
+            <input type="text" class="form-check-input">
+          </select>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <label>Benchmark (ploted as line graph)</label>
+          <select class="form-select" [(ngModel)]="BBenchMark" (change)="updateFormData('BBenchmark', BBenchMark)">
+            <option value="" class="" style="display: none;" selected="selected">Select</option>
+            <input type="text" class="form-check-input">
+          </select>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <label for="">Benchmark Plot Axis</label>
+          <select name="" id="" class="form-select" [(ngModel)]="BPlotAxis"
+            (change)="updateFormData('BBenchmarkPA', BPlotAxis)">
+            <option value="Primary Y (Y1)">Primary Y (Y1)</option>
+            <option value="Secondary Y (Y2)">Secondary Y (Y2)</option>
+          </select>
+        </div>
+      </div>
+      }@else if (radioValue==='Spend') {
+      <div class="col-sm-12">
+        <div class="col-sm-12">
+          <label>Facility</label>
+          <select class="form-select" [(ngModel)]="SFacility" (change)="updateFormData('SFacility', SFacility)">
+            <option value="" class="" style="display: none;" selected="selected">Select</option>
+            <option label="Test Facility" value="number:1">Test Facility</option>
+          </select>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <label>Device</label>
+          <select class="form-select" [(ngModel)]="SDevice" (change)="updateFormData('SDevice', SDevice)">
+            <option value="" class="" style="display: none;" selected="selected">Select</option>
+            <input type="text" class="form-check-input">
+          </select>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <label>Parameter</label>
+          <select class="form-select" [(ngModel)]="SParameter" (change)="updateFormData('SParameter', SParameter)">
+            <option value="" class="" selected="selected">Select</option>
+            <input type="text" class="form-check-input">
+          </select>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <label>Graph Type</label>
+          <select class="form-select" [(ngModel)]="SGraphType" (change)="updateFormData('SgraphType', SGraphType)">
+            <option value="" class="" selected="selected">Select</option>
+            <option value="Line">Line</option>
+            <option value="Area">Area</option>
+            <option value="Bar">Bar</option>
+            <option value="Pie">Pie</option>
+            <option value="Donut">Donut</option>
+            <option value="Heatmap">Heatmap</option>
+          </select>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <label for="">Plot Axis</label>
+          <select name="" id="" class="form-select" [(ngModel)]="SPlotAxis"
+            (change)="updateFormData('SplotAxis', SPlotAxis)">
+            <option value="Primary Y (Y1)">Primary Y (Y1)</option>
+            <option value="Secondary Y (Y2)">Secondary Y (Y2)</option>
+          </select>
+        </div>
+      </div>
+      }@else if (radioValue==='KPI') {
+      <div class="col-sm-12">
+        <label>Facility</label>
+        <select class="form-select" [(ngModel)]="KFacility" (change)="updateFormData('KFacility', KFacility)">
+          <option value="" class="" selected="selected">Select</option>
+          <option label="Test Facility" value="number:1">Test Facility</option>
+        </select>
+      </div>
+      <div class="col-sm-12">
+        <label>KPI</label>
+        <select class="form-select" [(ngModel)]="Kpi" (change)="updateFormData('Kpi', Kpi)">
+          <option value="" class="" selected="selected">Select</option>
+        </select>
+      </div>
+      }
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="d-flex w-100 justify-content-between align-items-center">
+      <button class="noselect" id="cancelBtn" mat-button mat-dialog-close><span class="text">Cancel</span><span class="icon"><svg
+            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path
+              d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z">
+            </path>
+          </svg></span></button>
+      <button mat-button [mat-dialog-close]="true" cdkFocusInitial class="btn btn-primary" id="addBtn">Add</button>
+    </mat-dialog-actions>
+
+  </div>
+</div>
