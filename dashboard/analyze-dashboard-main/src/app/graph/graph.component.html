@@ -280,6 +280,7 @@
                         [(ngModel)]="selectedGraphType" (change)="onGraphTypeChange()">
                         <option value="bar">Bar Chart</option>
                         <option value="line">Line Chart</option>
+                        <option value="pie">Pie Chart</option>
                     </select>
                 </div>
                 <div class="d-flex custom-entry input-group w-25">
@@ -288,7 +289,7 @@
                         id="addBtn">Submit</button>
                 </div>
             </div>
-            <div class="d-flex custom-graph vega-container">
+            <div class="custom-graph vega-container d-flex justify-content-center align-items-center">
                 <div id="vega-chart" #vegachart></div>
                 <div class="btn-container">
                     <button id="fullscreen-btn" (click)="toggleFullScreen()" class="btn btn-light ml-2">⛶</button>

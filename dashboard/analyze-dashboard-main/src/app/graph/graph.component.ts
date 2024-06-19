@@ -14,7 +14,7 @@ import { formatDate } from '@angular/common';
 @Component({
   selector: 'app-graph',
   standalone: true,
-  imports: [CommonModule, FormsModule, SidebarComponent, NgMultiSelectDropDownModule, MatDialogModule, DialogContentComponent,],
+  imports: [CommonModule, FormsModule, SidebarComponent, NgMultiSelectDropDownModule, MatDialogModule, DialogContentComponent],
   templateUrl: './graph.component.html',
   styleUrls: ['./graph.component.css']
 })
@@ -37,6 +37,8 @@ export class GraphComponent implements OnInit {
   DataOption: any;
   StartMonth: any;
   EndMonth: any;
+  originalWidth: number = 850;
+  originalHeight: number = 400;
   constructor(private dataService: DataService, public dialog: MatDialog, private formDataService: FormService) { }
 
   @ViewChild('vegachart') img!: ElementRef;
@@ -45,19 +47,33 @@ export class GraphComponent implements OnInit {
     const elem = this.img.nativeElement;
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) { 
+    } else if (elem.mozRequestFullScreen) {
       elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) { 
+    } else if (elem.webkitRequestFullscreen) {
       elem.webkitRequestFullscreen();
     } else if (elem.msRequestFullscreen) {
       elem.msRequestFullscreen();
     }
+    document.addEventListener('fullscreenchange', this.onFullScreenChange.bind(this));
+  }
+  onFullScreenChange() {
+    if (document.fullscreenElement) {
+      this.resizeVegaChart(true);
+    } else {
+      this.resizeVegaChart(false);
+    }
+  }
+
+  resizeVegaChart(fullscreen: boolean) {
+    const width = fullscreen ? window.innerWidth : this.originalWidth;
+    const height = fullscreen ? window.innerHeight : this.originalHeight;
+    this.renderGraph(this.data, width, height);
   }
 
   ngOnInit(): void {
     this.fetchDataAndRenderGraph();
   }
-  
+
   resetFields() {
     this.selectedHours = [];
     this.view = '';
@@ -70,7 +86,7 @@ export class GraphComponent implements OnInit {
     this.StartMonth = '';
     this.EndMonth = '';
   }
-  
+
 
 
   openDialog() {
@@ -103,6 +119,36 @@ export class GraphComponent implements OnInit {
   onFilterChange(item: any) {
     // console.log('Filter:', item);
   }
+  fetchDataAndRenderGraph(): void {
+
+    this.dataService.fetchData(this.id).subscribe(
+      (data) => {
+        this.data = data;
+        this.renderGraph(data, this.originalWidth, this.originalHeight);
+      },
+      (error) => {
+        console.error('Error fetching data from backend', error);
+        this.isError = true;
+      }
+    );
+    const formData = { ...this.formDataService.getFormData() };
+    this.dataService.sendRequestWithFormData(formData).subscribe(
+      (data) => {
+        this.formDataRes = data;
+        console.log(this.formDataRes);
+      }
+    )
+    this.resetFields();
+  }
+  fetchFormData(): void {
+    const formData = { ...this.formDataService.getFormData() };
+    this.dataService.sendRequestWithFormData(formData).subscribe(
+      (res) => {
+        this.formDataRes = res;
+        console.log(this.formDataRes);
+      }
+    )
+  }
 
   updateFormData(field: string, value: any) {
     const formData = this.formDataService.getFormData();
@@ -125,38 +171,9 @@ export class GraphComponent implements OnInit {
     this.fetchDataAndRenderGraph();
   }
 
-  fetchDataAndRenderGraph(): void {
-    this.dataService.fetchData(this.id).subscribe(
-      (data) => {
-        this.data = data;
-        this.renderGraph(data);
-      },
-      (error) => {
-        console.error('Error fetching data from backend', error);
-        this.isError = true;
-      }
-    );
-    const formData = {...this.formDataService.getFormData()};
-    this.dataService.sendRequestWithFormData(formData).subscribe(
-      (data) => {
-        this.formDataRes = data;
-        console.log(this.formDataRes);        
-      } 
-    )
-    this.resetFields();
-  }
-  fetchFormData(): void {
-    const formData = { ...this.formDataService.getFormData() };
-    this.dataService.sendRequestWithFormData(formData).subscribe(
-      (res) => {
-        console.log(formData);
-        this.formDataRes = res;
-        console.log(this.formDataRes);
-      }
-    )
-  }
 
-  renderGraph(data: any): void {
+
+  renderGraph(data: any, width: number, height: number): void {
     const values = [
       { "category": "KW", "amount": data[this.id]?.KW ?? 0 },
       { "category": "KW1", "amount": data[this.id]?.KW1 ?? 0 },
@@ -167,10 +184,8 @@ export class GraphComponent implements OnInit {
       { "category": "KVArh", "amount": data[this.id]?.KVArh ?? 0 },
       { "category": "KVA1", "amount": data[this.id]?.KVA1 ?? 0 },
       { "category": "KVA2", "amount": data[this.id]?.KVA2 ?? 0 },
-      { "category": "KVA3", "amount": data[this.id]?.KVA3 ?? 0 },
-      { "category": "KVAR1", "amount": data[this.id]?.KVAR1 ?? 0 },
-      { "category": "KVAR2", "amount": data[this.id]?.KVAR2 ?? 0 },
-      { "category": "KVAR3", "amount": data[this.id]?.KVAR3 ?? 0 }
+      { "category": "KVA2", "amount": data[this.id]?.KVA3 ?? 0 },
+
     ];
 
     const validValues = values.filter(item => item.amount !== null && item.amount !== undefined && !isNaN(item.amount));
@@ -179,22 +194,24 @@ export class GraphComponent implements OnInit {
 
     switch (this.selectedGraphType) {
       case 'bar':
-        spec = this.getBarChartSpec(validValues);
+        spec = this.getBarChartSpec(validValues, width, height);
         break;
       case 'line':
-        spec = this.getLineChartSpec(validValues);
+        spec = this.getLineChartSpec(validValues, width, height);
+        break;
+      case 'pie':
+        spec = this.getPieChartSpec(validValues, width, height);
         break;
       default:
-        spec = this.getBarChartSpec(validValues);
+        spec = this.getBarChartSpec(validValues, width, height);
     }
     embed('#vega-chart', spec).catch(console.error);
   }
-
-  getBarChartSpec(values: any[]): VisualizationSpec {
+  getBarChartSpec(values: any[], width: number, height: number): VisualizationSpec {
     return {
       "$schema": "https://vega.github.io/schema/vega/v5.json",
-      "width": 900,
-      "height": 400,
+      "width": width,
+      "height": height,
       "padding": 10,
       "background": "white",
       "data": [
@@ -275,11 +292,11 @@ export class GraphComponent implements OnInit {
     };
   }
 
-  getLineChartSpec(values: any[]): VisualizationSpec {
+  getLineChartSpec(values: any[], width: number, height: number): VisualizationSpec {
     return {
       "$schema": "https://vega.github.io/schema/vega/v5.json",
-      "width": 900,
-      "height": 400,
+      "width": width,
+      "height": height,
       "padding": 10,
       "background": "white",
       "data": [
@@ -332,6 +349,89 @@ export class GraphComponent implements OnInit {
             },
             "hover": {
               "strokeOpacity": { "value": 0.5 }
+            }
+          }
+        }
+      ]
+    };
+  }
+
+  getPieChartSpec(values: any[], width: number, height: number): VisualizationSpec {
+    return {
+      "$schema": "https://vega.github.io/schema/vega/v5.json",
+      "width": width,
+      "height": height,
+      "padding": 10,
+      "autosize": {
+        "type": "fit",
+        "contains": "padding"
+      },
+      "data": [
+        {
+          "name": "table",
+          "values": values,
+          "transform": [
+            {
+              "type": "pie",
+              "field": "amount"
+            }
+          ]
+        }
+      ],
+      "signals": [
+        {
+          "name": "tooltip",
+          "value": {},
+          "on": [
+            { "events": "arc:mouseover", "update": "datum" },
+            { "events": "arc:mouseout", "update": "{}" }
+          ]
+        }
+      ],
+      "scales": [
+        {
+          "name": "color",
+          "type": "ordinal",
+          "domain": { "data": "table", "field": "category" },
+          "range": { "scheme": "category20" }
+        }
+      ],
+      "marks": [
+        {
+          "type": "arc",
+          "from": { "data": "table" },
+          "encode": {
+            "enter": {
+              "fill": { "scale": "color", "field": "category" },
+              "x": { "signal": "width / 2" },
+              "y": { "signal": "height / 2" },
+              "tooltip": { "signal": "{'category': datum.category, 'amount': datum.amount}" }
+            },
+            "update": {
+              "startAngle": { "field": "startAngle" },
+              "endAngle": { "field": "endAngle" },
+              "padAngle": { "signal": "0.01" },
+              "innerRadius": { "signal": "0" },
+              "outerRadius": { "signal": "min(width, height) / 2" },
+              "cornerRadius": { "signal": "2" },
+              "stroke": { "value": "white" },
+              "strokeWidth": { "value": 1 }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "from": { "data": "table" },
+          "encode": {
+            "enter": {
+              "x": { "signal": "width / 2" },
+              "y": { "signal": "height / 2" },
+              "radius": { "signal": "min(width, height) / 2 * 0.8" },
+              "theta": { "field": "midAngle" },
+              "fill": { "value": "white" },
+              "align": { "value": "center" },
+              "baseline": { "value": "middle" },
+              "text": { "field": "category" }
             }
           }
         }

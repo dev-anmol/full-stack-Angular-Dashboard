@@ -7,7 +7,10 @@ body {
 	animation: gradient 15s ease infinite;
 	height: 100vh;
     font-family: sans-serif;
+	width: 100%;
+	overflow-x: hidden;
 }
+
 html{
 	width: 100%;
 	height: 100%;

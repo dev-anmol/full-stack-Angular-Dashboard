@@ -98,7 +98,7 @@ app.get('/form-data', async (req, res) => {
         const result = await pool.request()
             .input('startMonth', sql.Date, formData.startMonth)
             .input('endMonth', sql.Date, formData.endMonth)
-            .query('SELECT * FROM Data_Energy WHERE ReadingDateTime >= @startMonth AND ReadingDateTime <= @endMonth');
+            .query('SELECT * FROM Data_Energy WHERE CAST(ReadingDateTime AS DATE) >= @startDate AND CAST(ReadingDateTime AS DATE) <= @endDate;');
 
         if (result.recordset.length === 0) {
             throw new Error('No Data Found in the Database');
