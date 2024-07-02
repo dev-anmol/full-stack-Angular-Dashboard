@@ -65,8 +65,8 @@ export class GraphComponent implements OnInit {
   }
 
   resizeVegaChart(fullscreen: boolean) {
-    const width = fullscreen ? window.innerWidth : this.originalWidth;
-    const height = fullscreen ? window.innerHeight : this.originalHeight;
+    const width = fullscreen ? window.innerWidth - 50 : this.originalWidth;
+    const height = fullscreen ? window.innerHeight - 50: this.originalHeight;
     this.renderGraph(this.data, width, height);
   }
 
@@ -87,16 +87,13 @@ export class GraphComponent implements OnInit {
     this.EndMonth = '';
   }
 
-
-
   openDialog() {
     const dialogRef = this.dialog.open(DialogContentComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result : ${result}`);
+      // console.log(`Dialog result : ${result}`);
     });
   }
-
 
   dropdownSettings: IDropdownSettings = {
     singleSelection: false,
@@ -119,6 +116,7 @@ export class GraphComponent implements OnInit {
   onFilterChange(item: any) {
     // console.log('Filter:', item);
   }
+
   fetchDataAndRenderGraph(): void {
 
     this.dataService.fetchData(this.id).subscribe(
@@ -131,23 +129,17 @@ export class GraphComponent implements OnInit {
         this.isError = true;
       }
     );
-    const formData = { ...this.formDataService.getFormData() };
-    this.dataService.sendRequestWithFormData(formData).subscribe(
-      (data) => {
-        this.formDataRes = data;
-        console.log(this.formDataRes);
-      }
-    )
     this.resetFields();
   }
-  fetchFormData(): void {
+  fetchFormData(): any {
     const formData = { ...this.formDataService.getFormData() };
     this.dataService.sendRequestWithFormData(formData).subscribe(
       (res) => {
         this.formDataRes = res;
-        console.log(this.formDataRes);
+        console.log("graph.component.ts",this.formDataRes);
       }
     )
+    this.resetFields();
   }
 
   updateFormData(field: string, value: any) {
@@ -166,12 +158,9 @@ export class GraphComponent implements OnInit {
     this.formDataService.setFormData(formData);
   }
 
-
   onGraphTypeChange(): void {
     this.fetchDataAndRenderGraph();
   }
-
-
 
   renderGraph(data: any, width: number, height: number): void {
     const values = [
@@ -184,8 +173,6 @@ export class GraphComponent implements OnInit {
       { "category": "KVArh", "amount": data[this.id]?.KVArh ?? 0 },
       { "category": "KVA1", "amount": data[this.id]?.KVA1 ?? 0 },
       { "category": "KVA2", "amount": data[this.id]?.KVA2 ?? 0 },
-      { "category": "KVA2", "amount": data[this.id]?.KVA3 ?? 0 },
-
     ];
 
     const validValues = values.filter(item => item.amount !== null && item.amount !== undefined && !isNaN(item.amount));

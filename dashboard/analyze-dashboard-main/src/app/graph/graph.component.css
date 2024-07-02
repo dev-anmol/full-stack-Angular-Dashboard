@@ -50,6 +50,7 @@
 
 #vega-chart {
   align-self: flex-end;
+  margin-left: 100px;
 }
 
 .custom-graph {
@@ -116,8 +117,8 @@
 }
 .btn-container button{
   position: absolute;
-  top: 10px;
-  right: 11.5%;
+  top: 14%;
+  right: 13%;
   display: none;
   z-index: 10;
   transition: opacity 0.3s ease;

@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError, map, shareReplay } from 'rxjs/operators';
+import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,7 @@ export class DataService {
     return this.http.get<any>(`http://localhost:3000/data-energy/${id}`);
   }
   sendRequestWithFormData(formData: any): Observable<any> {
-    console.log(formData);
+    console.log("data.service.ts",formData);
     const params = new HttpParams()
       .set('view', formData.view)
       .set('analysisType', formData.analysisType)
@@ -55,7 +55,7 @@ export class DataService {
       .set('sPlotAxis', formData.SPlotAxis)
       .set('kFacility', formData.KFacility)
       .set('kpi', formData.Kpi)
-    console.log(params)
+    console.log("Params",params);
     return this.http.get<any>('http://localhost:3000/form-data', { params });
   }
 

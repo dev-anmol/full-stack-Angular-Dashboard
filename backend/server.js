@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const sql = require('mssql/msnodesqlv8');
 const app = express();
 const dotenv = require('dotenv');
@@ -8,6 +9,8 @@ const port = process.env.PORT;
 
 dotenv.config();
 app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 const config = {
     server: process.env.DB_SERVER,
@@ -15,11 +18,19 @@ const config = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     driver: 'msnodesqlv8',
+    options:{
+        encrypt: true,
+        trustServerCertificate: true,
+        enableArithAbort: true,
+        connectonTimeout: 300000,
+        requestTimeout: 300000
+
+    },
     pool: {
-        max: 100,
+        max: 10,
         min: 0,
         idleTimeoutMillis: 3000,
-    }
+    },
 }
 
 let pool;
@@ -83,22 +94,19 @@ app.get('/data-energy/:id', async (req, res) => {
 app.get('/form-data', async (req, res) => {
     try {
         const formData = {
-            view: req.query.view,
-            analysisType: req.query.analysisType,
-            compareBy: req.query.compareBy,
-            plotBy: req.query.plotBy,
-            selectedHours: req.query.selectedHours,
-            dataRange: req.query.dataRange,
-            day: req.query.day,
-            dataOption: req.query.dataOption,
-            startMonth: req.query.startMonth,
-            endMonth: req.query.endMonth,
+            "startMonth": req.query.startMonth,
+            "endMonth": req.query.endMonth,
         }
-        console.log(formData);
+        console.log("backend form data",formData);
+        console.log("backend start date", formData.startMonth);
+        console.log("backend end date", formData.endMonth);
+
         const result = await pool.request()
-            .input('startMonth', sql.Date, formData.startMonth)
-            .input('endMonth', sql.Date, formData.endMonth)
-            .query('SELECT * FROM Data_Energy WHERE CAST(ReadingDateTime AS DATE) >= @startDate AND CAST(ReadingDateTime AS DATE) <= @endDate;');
+        .input('startMonth', sql.Date, formData.startMonth)
+        .input('endMonth', sql.Date, formData.endMonth)
+        .query('SELECT * FROM Data_Energy WHERE CAST(ReadingDateTime AS DATE) >= @startMonth AND CAST(ReadingDateTime AS DATE) <= @endMonth;',{
+            requestTimeout:30000
+        });
 
         if (result.recordset.length === 0) {
             throw new Error('No Data Found in the Database');
