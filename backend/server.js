@@ -91,7 +91,8 @@ app.get('/data-energy/:id', async (req, res) => {
     }
 });
 
-app.get('/form-data', async (req, res) => {
+app.get('/form-data/:id', async (req, res) => {
+    const deviceId = req.params.id;
     try {
         const formData = {
             "startMonth": req.query.startMonth,
@@ -104,13 +105,15 @@ app.get('/form-data', async (req, res) => {
         const result = await pool.request()
         .input('startMonth', sql.Date, formData.startMonth)
         .input('endMonth', sql.Date, formData.endMonth)
-        .query('SELECT * FROM Data_Energy WHERE CAST(ReadingDateTime AS DATE) >= @startMonth AND CAST(ReadingDateTime AS DATE) <= @endMonth;',{
+        .input('deviceId', sql.Int, deviceId)
+        .query('SELECT * FROM Data_Energy WHERE DeviceId = @deviceId AND CAST(ReadingDateTime AS DATE) >= @startMonth AND CAST(ReadingDateTime AS DATE) <= @endMonth;',{
             requestTimeout:30000
         });
 
         if (result.recordset.length === 0) {
             throw new Error('No Data Found in the Database');
         }
+        console.log(result);
         res.status(200).send(result);
 
     } catch (error) {

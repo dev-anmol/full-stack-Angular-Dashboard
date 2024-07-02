@@ -26,7 +26,7 @@ export class DataService {
     }
     return this.http.get<any>(`http://localhost:3000/data-energy/${id}`);
   }
-  sendRequestWithFormData(formData: any): Observable<any> {
+  sendRequestWithFormData(formData: any, id:number): Observable<any> {
     console.log("data.service.ts",formData);
     const params = new HttpParams()
       .set('view', formData.view)
@@ -56,7 +56,7 @@ export class DataService {
       .set('kFacility', formData.KFacility)
       .set('kpi', formData.Kpi)
     console.log("Params",params);
-    return this.http.get<any>('http://localhost:3000/form-data', { params });
+    return this.http.get<any>(`http://localhost:3000/form-data/${id}`, { params });
   }
 
   private transformData(data: any): any {

@@ -122,6 +122,7 @@ export class GraphComponent implements OnInit {
     this.dataService.fetchData(this.id).subscribe(
       (data) => {
         this.data = data;
+        console.log(data);
         this.renderGraph(data, this.originalWidth, this.originalHeight);
       },
       (error) => {
@@ -133,10 +134,16 @@ export class GraphComponent implements OnInit {
   }
   fetchFormData(): any {
     const formData = { ...this.formDataService.getFormData() };
-    this.dataService.sendRequestWithFormData(formData).subscribe(
+    this.dataService.sendRequestWithFormData(formData, this.id).subscribe(
       (res) => {
-        this.formDataRes = res;
-        console.log("graph.component.ts",this.formDataRes);
+
+        if(res.recordset.length === 0){
+          console.log('No data found in the database')
+        }else{
+          this.formDataRes = res;
+          this.renderGraph(this.formDataRes.recordset, this.originalWidth, this.originalHeight);
+        }
+
       }
     )
     this.resetFields();
@@ -194,6 +201,7 @@ export class GraphComponent implements OnInit {
     }
     embed('#vega-chart', spec).catch(console.error);
   }
+
   getBarChartSpec(values: any[], width: number, height: number): VisualizationSpec {
     return {
       "$schema": "https://vega.github.io/schema/vega/v5.json",
