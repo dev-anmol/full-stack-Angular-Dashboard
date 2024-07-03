@@ -273,29 +273,35 @@
                 </div>
 
             </div>
-            <div class="d-flex custom-graph-topbar">
-                <label for="graphType">Choose graph type:</label>
-                <div class=" d-flex">
-                    <select class="form-select" id="graphType" aria-label="Default select example"
-                        [(ngModel)]="selectedGraphType" (change)="onGraphTypeChange()">
-                        <option value="bar">Bar Chart</option>
-                        <option value="line">Line Chart</option>
-                        <option value="pie">Pie Chart</option>
-                    </select>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="d-flex custom-graph-topbar">
+                        <label for="graphType">Choose graph type:</label>
+                        <div class=" d-flex">
+                            <select class="form-select" id="graphType" aria-label="Default select example"
+                                [(ngModel)]="selectedGraphType" (change)="onGraphTypeChange()">
+                                <option value="bar">Bar Chart</option>
+                                <option value="line">Line Chart</option>
+                                <option value="pie">Pie Chart</option>
+                            </select>
+                        </div>
+                        <div class="d-flex custom-entry input-group w-25">
+                            <input type="text" class="form-control" placeholder="Enter Device ID" [(ngModel)]="id">
+                            <button class="btn btn-dark" type="button" (click)="fetchDataAndRenderGraph()"
+                                id="addBtn">Submit</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="d-flex custom-entry input-group w-25">
-                    <input type="text" class="form-control" placeholder="Enter Device ID" [(ngModel)]="id">
-                    <button class="btn btn-dark" type="button" (click)="fetchDataAndRenderGraph()"
-                        id="addBtn">Submit</button>
+                <div class="custom-graph vega-container d-flex justify-content-center align-items-center">
+                    <div id="vega-chart" #vegachart></div>
+                    <div id="piechart" style="width: 900px; height: 500px;"></div>
+                    <div class="btn-container">
+                        <button id="fullscreen-btn" (click)="toggleFullScreen()" class="btn btn-light ml-2">⛶</button>
+                    </div>
                 </div>
             </div>
-            <div class="custom-graph vega-container d-flex justify-content-center align-items-center">
-                <div id="vega-chart" #vegachart></div>
-                <div id="piechart" style="width: 900px; height: 500px;"></div>
-                <div class="btn-container">
-                    <button id="fullscreen-btn" (click)="toggleFullScreen()" class="btn btn-light ml-2">⛶</button>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>

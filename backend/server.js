@@ -10,7 +10,7 @@ const port = process.env.PORT;
 dotenv.config();
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const config = {
     server: process.env.DB_SERVER,
@@ -18,7 +18,7 @@ const config = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     driver: 'msnodesqlv8',
-    options:{
+    options: {
         encrypt: true,
         trustServerCertificate: true,
         enableArithAbort: true,
@@ -98,17 +98,17 @@ app.get('/form-data/:id', async (req, res) => {
             "startMonth": req.query.startMonth,
             "endMonth": req.query.endMonth,
         }
-        console.log("backend form data",formData);
+        console.log("backend form data", formData);
         console.log("backend start date", formData.startMonth);
         console.log("backend end date", formData.endMonth);
 
         const result = await pool.request()
-        .input('startMonth', sql.Date, formData.startMonth)
-        .input('endMonth', sql.Date, formData.endMonth)
-        .input('deviceId', sql.Int, deviceId)
-        .query('SELECT * FROM Data_Energy WHERE DeviceId = @deviceId AND CAST(ReadingDateTime AS DATE) >= @startMonth AND CAST(ReadingDateTime AS DATE) <= @endMonth;',{
-            requestTimeout:30000
-        });
+            .input('startMonth', sql.Date, formData.startMonth)
+            .input('endMonth', sql.Date, formData.endMonth)
+            .input('deviceId', sql.Int, deviceId)
+            .query('SELECT * FROM Data_Energy WHERE DeviceId = @deviceId AND CAST(ReadingDateTime AS DATE) >= @startMonth AND CAST(ReadingDateTime AS DATE) <= @endMonth;', {
+                requestTimeout: 30000
+            });
 
         if (result.recordset.length === 0) {
             throw new Error('No Data Found in the Database');
@@ -118,7 +118,7 @@ app.get('/form-data/:id', async (req, res) => {
 
     } catch (error) {
         if (error) {
-            console.log('Error fetching the data from the databse', error)
+            console.log('Error fetching the data from the database', error)
         }
     }
 })
