@@ -39,9 +39,16 @@ export class GraphComponent implements OnInit {
   EndMonth: any;
   originalWidth: number = 850;
   originalHeight: number = 400;
+  showAxisName: boolean = false;
+
   constructor(private dataService: DataService, public dialog: MatDialog, private formDataService: FormService) { }
 
   @ViewChild('vegachart') img!: ElementRef;
+
+  updateAxisName(){
+    this.showAxisName = !this.showAxisName;
+    this.fetchDataAndRenderGraph();
+  }
 
   toggleFullScreen() {
     const elem = this.img.nativeElement;
@@ -242,8 +249,8 @@ export class GraphComponent implements OnInit {
         }
       ],
       "axes": [
-        { "orient": "bottom", "scale": "xscale" },
-        { "orient": "left", "scale": "yscale" }
+        { "orient": "bottom", "scale": "xscale", "title": this.showAxisName ? "parameters":undefined },
+        { "orient": "left", "scale": "yscale", "title": this.showAxisName ? "value" : undefined  }
       ],
       "marks": [
         {

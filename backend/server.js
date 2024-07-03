@@ -63,11 +63,11 @@ app.get('/data-energy', async (req, res) => {
         res.status(200).send(result.recordset)
     } catch (err) {
         if (err) {
-            console.log('Error fetching the data from the database', err);
-            res.status(404).json({
-                msg: err,
-            })
+            console.log('Error fetching the data from the Database', err);
         }
+        res.status(404).json({
+            err,
+        })
     }
 });
 
@@ -122,7 +122,6 @@ app.get('/form-data/:id', async (req, res) => {
         }
     }
 })
-
 
 app.listen(3000, (err) => {
     if (err) {

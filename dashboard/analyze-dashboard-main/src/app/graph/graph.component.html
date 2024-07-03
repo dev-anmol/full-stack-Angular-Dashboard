@@ -182,7 +182,7 @@
                             </label>
                         </div>
                         <div class="col-sm-12 mt-2">
-                            <input type="checkbox" class="form-check-input" id="checkbox-2" name="checkbox">
+                            <input type="checkbox" class="form-check-input" id="checkbox-2" name="checkbox" [(ngModel)]="showAxisName" (click)="updateAxisName()">
                             <span class="pb-lg-1" style="visibility: hidden;">for</span>
                             <label class="checkbox-area" style="font-size: 14px;" for="checkbox-2">Include Axis Name
                             </label>
@@ -274,7 +274,7 @@
 
             </div>
 
-            <div class="col-md-12">
+            <div class="col-md-12 container">
                 <div class="row">
                     <div class="d-flex custom-graph-topbar">
                         <label for="graphType">Choose graph type:</label>
