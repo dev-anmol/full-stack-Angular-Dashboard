@@ -182,7 +182,8 @@
                             </label>
                         </div>
                         <div class="col-sm-12 mt-2">
-                            <input type="checkbox" class="form-check-input" id="checkbox-2" name="checkbox" [(ngModel)]="showAxisName" (click)="updateAxisName()">
+                            <input type="checkbox" class="form-check-input" id="checkbox-2" name="checkbox"
+                                [(ngModel)]="showAxisName" (click)="updateAxisName()">
                             <span class="pb-lg-1" style="visibility: hidden;">for</span>
                             <label class="checkbox-area" style="font-size: 14px;" for="checkbox-2">Include Axis Name
                             </label>
@@ -193,8 +194,8 @@
                             </button>
                         </div>
                         <div class="col-sm-12 text-center">
-                            <button class="btn btn-primary" style="width: 30%;margin-top: 25px"
-                                id="addBtn" (click)="fetchFormData()">Show</button>
+                            <button class="btn btn-primary" style="width: 30%;margin-top: 25px" id="addBtn"
+                                (click)="fetchFormData()">Show</button>
                         </div>
                     </div>
                 </div>
@@ -295,7 +296,6 @@
                 </div>
                 <div class="custom-graph vega-container d-flex justify-content-center align-items-center">
                     <div id="vega-chart" #vegachart></div>
-                    <div id="piechart" style="width: 900px; height: 500px;"></div>
                     <div class="btn-container">
                         <button id="fullscreen-btn" (click)="toggleFullScreen()" class="btn btn-light ml-2">⛶</button>
                     </div>
