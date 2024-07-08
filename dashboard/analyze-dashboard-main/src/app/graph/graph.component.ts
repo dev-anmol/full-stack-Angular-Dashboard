@@ -10,6 +10,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogContentComponent } from '../dialog-content/dialog-content.component';
 import { FormService } from '../form.service';
 import { formatDate } from '@angular/common';
+import { error } from 'vega';
 
 @Component({
   selector: 'app-graph',
@@ -24,8 +25,8 @@ export class GraphComponent implements OnInit {
   selectedGraphType: string = 'bar';
   data: any;
   formDataRes: any;
-  startDate: any;
-  endDate: any;
+  StartDate: any;
+  EndDate: any;
   hours = Array.from({ length: 24 }, (_, i) => ({ id: i, item_text: i.toString() }));
   selectedHours: any[] = [];
   view: any;
@@ -33,13 +34,17 @@ export class GraphComponent implements OnInit {
   CompareBy: any;
   PlotBy: any;
   DateRange: any;
-  Day: any;
   DataOption: any;
-  StartMonth: any;
-  EndMonth: any;
   originalWidth: number = 850;
   originalHeight: number = 400;
   showAxisName: boolean = false;
+  isErrorForm:boolean = false;
+  myGlobalData: any;
+  iterations: number[] = Array.from({ length: 30 }, (_, i) => i + 1);
+  selectedIteration: any = 1;
+  dateRangeOption: string = '';
+  liveTestCase: boolean = false;
+
 
   constructor(private dataService: DataService, public dialog: MatDialog, private formDataService: FormService) { }
 
@@ -47,8 +52,138 @@ export class GraphComponent implements OnInit {
 
   updateAxisName(){
     this.showAxisName = !this.showAxisName;
-    this.fetchDataAndRenderGraph();
+    this.renderGraphOnly();
   }
+
+  onDateOptionChange():void{
+    if(this.DataOption === 'Week'){
+      this.setDatesForWeek();
+    }
+    if(this.DataOption === 'Month'){
+      this.setDatesForMonth();
+    }
+    if(this.DataOption === 'Year'){
+      this.setDatesForYear();
+    }
+    if(this.DataOption === 'Day'){
+      this.setDatesForDay();
+    }
+    if(this.DataOption === 'Live'){
+      this.setDatesForLive();
+    }
+  }
+
+  onLiveTestCase(){
+    this.liveTestCase = !this.liveTestCase;
+    console.log("live clicked", this.liveTestCase);
+  }
+
+  setDatesForLive(){
+    const StartDate  = new Date();
+    const endOfDay = new Date(StartDate);
+
+    this.EndDate = this.formatDate(endOfDay);
+    this.StartDate = this.formatDate(StartDate);
+
+    this.updateFormData('StartDate', this.StartDate);
+    this.updateFormData('StartDate', this.EndDate);
+
+  }
+
+  setDatesForYear(): void {
+    const today = new Date();
+    const endOfYear = new Date(today);
+
+    // Determine end date based on dateRangeOption
+    if (this.dateRangeOption === 'last') {
+      endOfYear.setFullYear(today.getFullYear() - 1, 11, 31);
+    } else if (this.dateRangeOption === 'previous') {
+      endOfYear.setFullYear(today.getFullYear() - 1, 11, 30);
+    }
+
+    this.EndDate = this.formatDate(endOfYear);
+
+    // Calculate start of the year
+    const startOfYear = new Date(endOfYear);
+    startOfYear.setFullYear(endOfYear.getFullYear() - (this.selectedIteration - 1), 0, 1);
+
+    this.StartDate = this.formatDate(startOfYear);
+    this.updateFormData('StartDate', this.StartDate);
+    this.updateFormData('EndDate', this.EndDate);
+  }
+  
+  setDatesForWeek():void{
+    const today = new Date();
+    const endOfWeek = new Date(today);
+
+    // Determine end date based on dateRangeOption
+    if (this.dateRangeOption === 'last') {
+      endOfWeek.setDate(today.getDate() - today.getDay() + 6);
+    } else if (this.dateRangeOption === 'previous') {
+      endOfWeek.setDate(today.getDate() - today.getDay() - 1);
+    }
+
+    this.EndDate = this.formatDate(endOfWeek);
+
+    // Calculate start of the week
+    const startOfWeek = new Date(endOfWeek);
+    startOfWeek.setDate(endOfWeek.getDate() - (7 * this.selectedIteration) + 1);
+
+    this.StartDate = this.formatDate(startOfWeek);
+    this.updateFormData('StartDate', this.StartDate);
+    this.updateFormData('EndDate', this.EndDate);
+  }
+  setDatesForMonth(): void {
+    const today = new Date();
+    const endOfMonth = new Date(today);
+
+    // Determine end date based on dateRangeOption
+    if (this.dateRangeOption === 'last') {
+      endOfMonth.setDate(0);
+    } else if (this.dateRangeOption === 'previous') {
+      endOfMonth.setMonth(today.getMonth() - 1, 0);
+    }
+
+    this.EndDate = this.formatDate(endOfMonth);
+
+    // Calculate start of the month
+    const startOfMonth = new Date(endOfMonth);
+    startOfMonth.setMonth(endOfMonth.getMonth() - (this.selectedIteration - 1), 1);
+
+    this.StartDate = this.formatDate(startOfMonth);
+    this.updateFormData('StartDate', this.StartDate);
+    this.updateFormData('EndDate', this.EndDate);
+  }
+  setDatesForDay(): void {
+    const today = new Date();
+    const endOfDay = new Date(today);
+
+    // Determine end date based on dateRangeOption
+    if (this.dateRangeOption === 'last') {
+      endOfDay.setDate(today.getDate() - 1);
+    } else if (this.dateRangeOption === 'previous') {
+      endOfDay.setDate(today.getDate() - 2);
+    }
+
+    this.EndDate = this.formatDate(endOfDay);
+
+    // Calculate start of the day
+    const startOfDay = new Date(endOfDay);
+    startOfDay.setDate(endOfDay.getDate() - (this.selectedIteration - 1));
+
+    this.StartDate = this.formatDate(startOfDay);
+    this.updateFormData('StartDate', this.StartDate);
+    this.updateFormData('EndDate', this.EndDate);
+  }
+
+
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+
 
   toggleFullScreen() {
     const elem = this.img.nativeElement;
@@ -88,10 +223,10 @@ export class GraphComponent implements OnInit {
     this.CompareBy = '';
     this.PlotBy = '';
     this.DateRange = '';
-    this.Day = '';
+    this.selectedIteration = '';
     this.DataOption = '';
-    this.StartMonth = '';
-    this.EndMonth = '';
+    this.StartDate = '';
+    this.EndDate = '';
   }
 
   openDialog() {
@@ -124,34 +259,45 @@ export class GraphComponent implements OnInit {
     // console.log('Filter:', item);
   }
 
+  
   fetchDataAndRenderGraph(): void {
 
     this.dataService.fetchData(this.id).subscribe(
-      (data) => {
+      (data) => {  
         this.data = data;
+        this.myGlobalData = data;
         console.log(data);
         this.renderGraph(data, this.originalWidth, this.originalHeight);
       },
       (error) => {
         console.error('Error fetching data from backend', error);
-        this.isError = true;
+        this.isErrorForm = true;
+        alert('No data found in the database')
       }
     );
     this.resetFields();
   }
+
+  renderGraphOnly():void{
+    this.renderGraph(this.myGlobalData, this.originalWidth, this.originalHeight);
+
+  }
   fetchFormData(): any {
     const formData = { ...this.formDataService.getFormData() };
-    this.dataService.sendRequestWithFormData(formData, this.id).subscribe(
-      (res) => {
-
+    this.dataService.sendRequestWithFormData(formData, this.id).subscribe({
+      next:(res) => {
         if(res.recordset.length === 0){
-          console.log('No data found in the database')
         }else{
           this.formDataRes = res;
           this.renderGraph(this.formDataRes.recordset, this.originalWidth, this.originalHeight);
         }
 
+      }, error: (error) => {
+        this.isErrorForm = true;
+        console.error('No Data found in the database', error);
       }
+
+    }
     )
     this.resetFields();
   }
@@ -159,7 +305,7 @@ export class GraphComponent implements OnInit {
   updateFormData(field: string, value: any) {
     const formData = this.formDataService.getFormData();
 
-    if (field === 'startMonth' || field === 'endMonth') {
+    if (field === 'StartDate' || field === 'EndDate') {
       const formattedDate = formatDate(value, 'yyyy-MM-dd', 'en-US');
       formData[field] = formattedDate;
     }

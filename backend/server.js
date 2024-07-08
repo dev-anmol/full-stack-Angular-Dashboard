@@ -95,18 +95,18 @@ app.get('/form-data/:id', async (req, res) => {
     const deviceId = req.params.id;
     try {
         const formData = {
-            "startMonth": req.query.startMonth,
-            "endMonth": req.query.endMonth,
+            "StartDate": req.query.StartDate,
+            "EndDate": req.query.EndDate,
         }
         console.log("backend form data", formData);
-        console.log("backend start date", formData.startMonth);
-        console.log("backend end date", formData.endMonth);
+        console.log("backend start date", formData.StartDate);
+        console.log("backend end date", formData.EndDate);
 
         const result = await pool.request()
-            .input('startMonth', sql.Date, formData.startMonth)
-            .input('endMonth', sql.Date, formData.endMonth)
+            .input('StartDate', sql.Date, formData.StartDate)
+            .input('EndDate', sql.Date, formData.EndDate)
             .input('deviceId', sql.Int, deviceId)
-            .query('SELECT * FROM Data_Energy WHERE DeviceId = @deviceId AND CAST(ReadingDateTime AS DATE) >= @startMonth AND CAST(ReadingDateTime AS DATE) <= @endMonth;', {
+            .query('SELECT * FROM Data_Energy WHERE DeviceId = @deviceId AND CAST(ReadingDateTime AS DATE) >= @StartDate AND CAST(ReadingDateTime AS DATE) <= @EndDate;', {
                 requestTimeout: 30000
             });
 

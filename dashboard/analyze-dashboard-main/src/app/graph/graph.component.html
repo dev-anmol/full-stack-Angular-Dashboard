@@ -211,37 +211,23 @@
                             <label class="date-range">Date Range</label>
                         </div>
                         <div class="col-sm-3">
-                            <select class="form-control" [(ngModel)]="DateRange"
-                                (change)="updateFormData('dataRange', DateRange)">
+                            <select class="form-control" [(ngModel)]="dateRangeOption"
+                                (change)="onDateOptionChange()" [disabled]="liveTestCase">
                                 <option value="" style="display:none;" class="" selected="selected">Select</option>
                                 <option label="Last" value="string:Last" selected="selected">Last</option>
                                 <option label="Previous" value="string:Previous">Previous</option>
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <select class="form-control" [(ngModel)]="Day" (change)="updateFormData('day', Day )">
-                                <option value="" style="display:none;" class="" selected="selected">Select</option>
-                                <option label="1" value="number:1">1</option>
-                                <option label="2" value="number:2">2</option>
-                                <option label="3" value="number:3">3</option>
-                                <option label="4" value="number:4">4</option>
-                                <option label="5" value="number:5">5</option>
-                                <option label="6" value="number:6">6</option>
-                                <option label="7" value="number:7">7</option>
-                                <option label="8" value="number:8">8</option>
-                                <option label="9" value="number:9">9</option>
-                                <option label="10" value="number:10">10</option>
-                                <option label="11" value="number:11">11</option>
-                                <option label="12" value="number:12">12</option>
-                                <option label="15" value="number:15">15</option>
-                                <option label="20" value="number:20">20</option>
-                                <option label="25" value="number:25">25</option>
-                                <option label="30" value="number:30">30</option>
+                            <select class="form-control" [(ngModel)]="selectedIteration" (change)="onDateOptionChange()" [disabled]="liveTestCase">
+                                <option value="" style="display: none;" selected="selected">Select</option>
+                                <option *ngFor="let Iteration of iterations" [value]="Iteration">{{Iteration}}</option>
+                                
                             </select>
                         </div>
                         <div class="col-sm-3">
                             <select class="form-control" [(ngModel)]="DataOption"
-                                (change)="updateFormData('dataOption', DataOption)">
+                                (change)="onDateOptionChange()">
                                 <option value="" style="display:none;" class="" selected="selected">Select</option>
                                 <option label="Live">Live</option>
                                 <option label="Day">Day</option>
@@ -251,14 +237,14 @@
                                 <option label="Custom Range">Custom Range</option>
                             </select>
                         </div>
-
+                        @if(DataOption==='Custom Range'){
                         <div class="row mt-lg-4">
                             <div class="col-sm-2 d-flex justify-content-end">
                                 <label class="dates-label">Start Date</label>
                             </div>
                             <div class="col-sm-3 d-flex justify-content-start input-container">
-                                <input type="date" class="form-control form-select" [(ngModel)]="StartMonth"
-                                    (change)="updateFormData('startMonth', StartMonth)">
+                                <input type="date" class="form-control form-select" [(ngModel)]="StartDate"
+                                    (change)="updateFormData('StartDate', StartDate)">
 
                             </div>
                             <div class="col-sm-1"></div>
@@ -266,10 +252,49 @@
                                 <label class="dates-label">End Date</label>
                             </div>
                             <div class="col-sm-3 d-flex justify-content-start input-container">
-                                <input type="date" class="form-control form-select" [(ngModel)]="EndMonth"
-                                    (change)="updateFormData('endMonth', EndMonth)">
+                                <input type="date" class="form-control form-select" [(ngModel)]="EndDate"
+                                    (change)="updateFormData('EndDate', EndDate)">
                             </div>
                         </div>
+                        }
+                        @if(DataOption==='Week' || DataOption==='Month' || DataOption === 'Year' || DataOption === 'Day'){
+                        <div class="row mt-lg-4">
+                            <div class="col-sm-2 d-flex justify-content-end">
+                                <label class="dates-label">Start Date</label>
+                            </div>
+                            <div class="col-sm-3 d-flex justify-content-start input-container">
+                                <input type="date" class="form-control form-select" [(ngModel)]="StartDate"
+                                    (change)="updateFormData('StartDate', StartDate)">
+
+                            </div>
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2 d-flex justify-content-end">
+                                <label class="dates-label">End Date</label>
+                            </div>
+                            <div class="col-sm-3 d-flex justify-content-start input-container">
+                                <input type="date" class="form-control form-select" [(ngModel)]="EndDate" [readonly]="true">
+                            </div>
+                        </div>
+                        }
+                        @if(DataOption==='Live'){
+                            <div class="row mt-lg-4">
+                                <div class="col-sm-2 d-flex justify-content-end">
+                                    <label class="dates-label">Start Date</label>
+                                </div>
+                                <div class="col-sm-3 d-flex justify-content-start input-container">
+                                    <input type="date" class="form-control form-select" [(ngModel)]="StartDate"
+                                        (change)="updateFormData('StartDate', StartDate)" readonly="true">
+    
+                                </div>
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-2 d-flex justify-content-end">
+                                    <label class="dates-label">End Date</label>
+                                </div>
+                                <div class="col-sm-3 d-flex justify-content-start input-container">
+                                    <input type="date" class="form-control form-select" [(ngModel)]="EndDate" [readonly]="true">
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
 
