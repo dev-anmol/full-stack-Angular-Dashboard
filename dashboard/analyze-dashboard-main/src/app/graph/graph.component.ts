@@ -10,7 +10,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogContentComponent } from '../dialog-content/dialog-content.component';
 import { FormService } from '../form.service';
 import { formatDate } from '@angular/common';
-import { error } from 'vega';
 
 @Component({
   selector: 'app-graph',
@@ -227,6 +226,7 @@ export class GraphComponent implements OnInit {
     this.DataOption = '';
     this.StartDate = '';
     this.EndDate = '';
+    this.dateRangeOption = '';
   }
 
   openDialog() {
@@ -478,8 +478,8 @@ export class GraphComponent implements OnInit {
         }
       ],
       "axes": [
-        { "orient": "bottom", "scale": "xscale" },
-        { "orient": "left", "scale": "yscale" }
+        { "orient": "bottom", "scale": "xscale", "title": this.showAxisName ? "parameters":undefined },
+        { "orient": "left", "scale": "yscale", "title": this.showAxisName ? "value" : undefined  }
       ],
       "marks": [
         {
