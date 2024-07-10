@@ -98,15 +98,81 @@ app.get('/form-data/:id', async (req, res) => {
             "StartDate": req.query.StartDate,
             "EndDate": req.query.EndDate,
         }
-        console.log("backend form data", formData);
-        console.log("backend start date", formData.StartDate);
-        console.log("backend end date", formData.EndDate);
+        const parameter = {
+           'A': req.query['A'],
+            'An': req.query['An'],
+            'Ag': req.query['Ag'],
+            'A1': req.query['A1'],
+            'A2': req.query['A2'],
+            'A3': req.query['A3'],
+            'VLL': req.query['VLL'],
+            'VLN': req.query['VLN'],
+            'V12': req.query['V12'],
+            'V23': req.query['V23'],
+            'V31': req.query['V31'],
+            'V1': req.query['V1'],
+            'V2': req.query['V2'],
+            'V3': req.query['V3'],
+            'KW': req.query['KW'],
+            'KW1': req.query['KW1'],
+            'KW2': req.query['KW2'],
+            'KW3': req.query['KW3'],
+            'KVA': req.query['KVA'],
+            'KVAr': req.query['KVAr'],
+            'KVArh': req.query['KVArh'],
+            'KVA1': req.query['KVA1'],
+            'KVA2': req.query['KVA2'],
+            'KVA3': req.query['KVA3'],
+            'KVAR1': req.query['KVAR1'],
+            'KVAR2': req.query['KVAR2'],
+            'KVAR3': req.query['KVAR3'],
+            'PF': req.query['PF'],
+            'PF1': req.query['PF1'],
+            'PF2': req.query['PF2'],
+            'PF3': req.query['PF3'],
+            'THDi1': req.query['THDi1'],
+            'THDi2': req.query['THDi2'],
+            'THDi3': req.query['THDi3'],
+            'THDin': req.query['THDin'],
+            'THDig': req.query['THDig'],
+            'TDD': req.query['TDD'],
+            'THDv12': req.query['THDv12'],
+            'THDv23': req.query['THDv23'],
+            'THDv31': req.query['THDv31'],
+            'THDv1': req.query['THDv1'],
+            'THDv2': req.query['THDv2'],
+            'THDv3': req.query['THDv3'],
+            'THDvln': req.query['THDvln'],
+            'VLN_Unbalanced': req.query['VLN_Unbalanced'],
+            'Present_Demand_KW': req.query['Present_Demand_KW'],
+            'Present_Demand_KVA': req.query['Present_Demand_KVA'],
+            'Present_Demand_KVAr': req.query['Present_Demand_KVAr'],
+            'Peak_Demand_KW': req.query['Peak_Demand_KW'],
+            'Peak_Demand_KVA': req.query['Peak_Demand_KVA'],
+            'Peak_Demand_KVAr': req.query['Peak_Demand_KVAr'],
+            'KWh_Recieved': req.query['KWh_Recieved'],
+            'KVARh_Recieved': req.query['KVARh_Recieved'],
+            'KVAh_Recieved': req.query['KVAh_Recieved']
+        }
 
+        const selectedParams = Object.keys(parameter).filter(key => parameter[key] !== undefined);
+
+        if (selectedParams.length === 0) {
+            return res.status(400).send('No parameter selected');
+        }
+        const selectClause = selectedParams.map(param => `[${param}]`).join(', ');
+        const sqlQuery = `
+        SELECT ${selectClause} 
+        FROM Data_Energy 
+        WHERE DeviceId = @deviceId 
+          AND CAST(ReadingDateTime AS DATE) >= @StartDate 
+          AND CAST(ReadingDateTime AS DATE) <= @EndDate
+    `;
         const result = await pool.request()
             .input('StartDate', sql.Date, formData.StartDate)
             .input('EndDate', sql.Date, formData.EndDate)
             .input('deviceId', sql.Int, deviceId)
-            .query('SELECT * FROM Data_Energy WHERE DeviceId = @deviceId AND CAST(ReadingDateTime AS DATE) >= @StartDate AND CAST(ReadingDateTime AS DATE) <= @EndDate;', {
+            .query(sqlQuery, {
                 requestTimeout: 30000
             });
 
@@ -118,7 +184,8 @@ app.get('/form-data/:id', async (req, res) => {
 
     } catch (error) {
         if (error) {
-            console.log('Error fetching the data from the database', error)
+            console.log('Error fetching the data from the database', error);
+            res.status(500).send('Internal Server Error');
         }
     }
 })

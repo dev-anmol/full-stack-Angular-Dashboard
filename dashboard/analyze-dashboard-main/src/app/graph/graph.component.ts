@@ -43,6 +43,7 @@ export class GraphComponent implements OnInit {
   selectedIteration: any = 1;
   dateRangeOption: string = '';
   liveTestCase: boolean = false;
+  selectedParams: any;
 
 
   constructor(private dataService: DataService, public dialog: MatDialog, private formDataService: FormService) { }
@@ -253,12 +254,14 @@ export class GraphComponent implements OnInit {
 
   
   fetchDataAndRenderGraph(): void {
+    this.selectedParams = this.formDataService.getFormData();
+    console.log("parameters benchmark",this.selectedParams.selectedParameter);
 
     this.dataService.fetchData(this.id).subscribe(
       (data) => {  
         this.data = data;
         this.myGlobalData = data;
-        console.log(data);
+        console.log("this is the data",data);
         this.renderGraph(data, this.originalWidth, this.originalHeight);
       },
       (error) => {
@@ -272,15 +275,16 @@ export class GraphComponent implements OnInit {
 
   renderGraphOnly():void{
     this.renderGraph(this.myGlobalData, this.originalWidth, this.originalHeight);
-
   }
   fetchFormData(): any {
     const formData = { ...this.formDataService.getFormData() };
     this.dataService.sendRequestWithFormData(formData, this.id).subscribe({
       next:(res) => {
         if(res.recordset.length === 0){
+          console.log("response is empty")
         }else{
           this.formDataRes = res;
+          console.log("data fetched after selecting the parameters",this.formDataRes.recordset);
           this.renderGraph(this.formDataRes.recordset, this.originalWidth, this.originalHeight);
         }
 
@@ -315,6 +319,18 @@ export class GraphComponent implements OnInit {
   }
 
   renderGraph(data: any, width: number, height: number): void {
+    console.log(this.selectedParams.selectedParameter);
+
+      // {"category": this.selectedParams.selectedParameter[0].item_text, "amount": data[this.id]?.KW ?? 0 },
+      // { "category": this.selectedParams.selectedParameter[1].item_text, "amount": data[this.id]?.KW1 ?? 0 },
+      // { "category": this.selectedParams.selectedParameter[2].item_text, "amount": data[this.id]?.KW2 ?? 0 },
+      // { "category": this.selectedParams.selectedParameter[3].item_text, "amount": data[this.id]?.KW3 ?? 0 },
+      // { "category": this.selectedParams.selectedParameter[4].item_text, "amount": data[this.id]?.KVA ?? 0 },
+      // { "category": this.selectedParams.selectedParameter[5].item_text, "amount": data[this.id]?.KVAr ?? 0 },
+      // { "category": this.selectedParams.selectedParameter[6].item_text, "amount": data[this.id]?.KVArh ?? 0 },
+      // { "category": this.selectedParams.selectedParameter[7].item_text, "amount": data[this.id]?.KVA1 ?? 0 },
+      // { "category": this.selectedParams.selectedParameter[8].item_text, "amount": data[this.id]?.KVA2 ?? 0 },
+    
     const values = [
       { "category": "KW", "amount": data[this.id]?.KW ?? 0 },
       { "category": "KW1", "amount": data[this.id]?.KW1 ?? 0 },

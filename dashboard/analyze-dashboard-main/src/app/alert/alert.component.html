@@ -3,12 +3,23 @@
         <p>DeviceId</p>
         <input type="text" [(ngModel)]="deviceId" class="rounded-3 form-control" style="height: fit-content;">
         <div>
-            <button (click)="fetchData()" class="btn btn-primary rounded-3" style="height: fit-content;">Submit</button>
+            <button (click)="fetchData(); handleClick()" class="btn btn-primary rounded-3" style="height: fit-content;">Submit</button>
         </div>
     </div>
 
     <div class="second-container">
         <p class="threshold">Threshold Value - {{threshold}}</p>
-        <p class="recievedVal">Recieved Value - {{data[this.deviceId].KW}}</p>
+
+        @if(isClicked){
+            <p>
+                Received Value - {{parameterValue}}
+            </p>
+        }@else {
+        <span style="display: none;"></span>
+
+        }
+        
     </div>
 </div>
+
+<!-- Recieved Value - {{data[this.deviceId].KW}} -->

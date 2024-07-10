@@ -27,8 +27,8 @@ export class DataService {
     return this.http.get<any>(`http://localhost:3000/data-energy/${id}`);
   }
   sendRequestWithFormData(formData: any, id:number): Observable<any> {
-    console.log("data.service.ts",formData);
-    const params = new HttpParams()
+    let parameters;
+    let params = new HttpParams()
       .set('view', formData.view)
       .set('analysisType', formData.analysisType)
       .set('compareBy', formData.compareBy)
@@ -56,6 +56,18 @@ export class DataService {
       .set('kFacility', formData.KFacility)
       .set('kpi', formData.Kpi)
     console.log("Params",params);
+    console.log("benchmark Parameters", formData.selectedParameter);
+    parameters = formData.selectedParameter;    
+    if(parameters){
+      parameters.forEach((item:any)=>{
+        params = params.set(item.item_text, item.item_text);
+      })  
+      console.log("params after setting values", params)   
+    }else{
+      console.log("Please select the parameters");
+      alert('Please select the parameters');
+    }
+
     return this.http.get<any>(`http://localhost:3000/form-data/${id}`, { params });
   }
 

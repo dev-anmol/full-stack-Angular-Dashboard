@@ -314,7 +314,7 @@
                         </div>
                         <div class="d-flex custom-entry input-group w-25">
                             <input type="text" class="form-control" placeholder="Enter Device ID" [(ngModel)]="id">
-                            <button class="btn btn-dark" type="button" (click)="fetchDataAndRenderGraph()"
+                            <button class="btn btn-dark" type="button" (click)="fetchDataAndRenderGraph(); fetchFormData()"
                                 id="addBtn">Submit</button>
                         </div>
                     </div>
