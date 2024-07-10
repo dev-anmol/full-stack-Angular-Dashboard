@@ -331,17 +331,18 @@ export class GraphComponent implements OnInit {
       // { "category": this.selectedParams.selectedParameter[7].item_text, "amount": data[this.id]?.KVA1 ?? 0 },
       // { "category": this.selectedParams.selectedParameter[8].item_text, "amount": data[this.id]?.KVA2 ?? 0 },
     
-    const values = [
-      { "category": "KW", "amount": data[this.id]?.KW ?? 0 },
-      { "category": "KW1", "amount": data[this.id]?.KW1 ?? 0 },
-      { "category": "KW2", "amount": data[this.id]?.KW2 ?? 0 },
-      { "category": "KW3", "amount": data[this.id]?.KW3 ?? 0 },
-      { "category": "KVA", "amount": data[this.id]?.KVA ?? 0 },
-      { "category": "KVAr", "amount": data[this.id]?.KVAr ?? 0 },
-      { "category": "KVArh", "amount": data[this.id]?.KVArh ?? 0 },
-      { "category": "KVA1", "amount": data[this.id]?.KVA1 ?? 0 },
-      { "category": "KVA2", "amount": data[this.id]?.KVA2 ?? 0 },
-    ];
+      const values = [
+        { "category": this.selectedParams.selectedParameter[0].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[0].item_text}`] ?? 0 },
+        { "category": this.selectedParams.selectedParameter[1].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[1].item_text}`] ?? 0 },
+        { "category": this.selectedParams.selectedParameter[2].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[2].item_text}`] ?? 0 },
+        { "category": this.selectedParams.selectedParameter[3].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[3].item_text}`] ?? 0 },
+        { "category": this.selectedParams.selectedParameter[4].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[4].item_text}`] ?? 0 },
+        { "category": this.selectedParams.selectedParameter[5].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[5].item_text}`] ?? 0 },
+        { "category": this.selectedParams.selectedParameter[6].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[6].item_text}`] ?? 0 },
+        { "category": this.selectedParams.selectedParameter[7].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[7].item_text}`] ?? 0 },
+        { "category": this.selectedParams.selectedParameter[8].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[8].item_text}`] ?? 0 },
+      ];
+      
 
     const validValues = values.filter(item => item.amount !== null && item.amount !== undefined && !isNaN(item.amount));
 
