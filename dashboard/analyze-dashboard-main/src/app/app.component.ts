@@ -8,11 +8,12 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { DialogContentComponent } from './dialog-content/dialog-content.component';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { DatepickerComponent } from './datepicker/datepicker.component';
+import { AlertComponent } from './alert/alert.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, BodyComponent, HttpClientModule, SidebarComponent, ModalModule, DialogContentComponent, MatDatepicker, DatepickerComponent],
+  imports: [RouterOutlet, HeaderComponent, BodyComponent, HttpClientModule, SidebarComponent, ModalModule, DialogContentComponent, MatDatepicker, DatepickerComponent,AlertComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

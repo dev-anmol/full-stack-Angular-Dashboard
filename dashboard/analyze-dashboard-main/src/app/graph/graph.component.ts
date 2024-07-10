@@ -93,7 +93,6 @@ export class GraphComponent implements OnInit {
     const today = new Date();
     const endOfYear = new Date(today);
 
-    // Determine end date based on dateRangeOption
     if (this.dateRangeOption === 'last') {
       endOfYear.setFullYear(today.getFullYear() - 1, 11, 31);
     } else if (this.dateRangeOption === 'previous') {
@@ -102,7 +101,6 @@ export class GraphComponent implements OnInit {
 
     this.EndDate = this.formatDate(endOfYear);
 
-    // Calculate start of the year
     const startOfYear = new Date(endOfYear);
     startOfYear.setFullYear(endOfYear.getFullYear() - (this.selectedIteration - 1), 0, 1);
 
@@ -115,7 +113,6 @@ export class GraphComponent implements OnInit {
     const today = new Date();
     const endOfWeek = new Date(today);
 
-    // Determine end date based on dateRangeOption
     if (this.dateRangeOption === 'last') {
       endOfWeek.setDate(today.getDate() - today.getDay() + 6);
     } else if (this.dateRangeOption === 'previous') {
@@ -124,7 +121,6 @@ export class GraphComponent implements OnInit {
 
     this.EndDate = this.formatDate(endOfWeek);
 
-    // Calculate start of the week
     const startOfWeek = new Date(endOfWeek);
     startOfWeek.setDate(endOfWeek.getDate() - (7 * this.selectedIteration) + 1);
 
@@ -136,7 +132,6 @@ export class GraphComponent implements OnInit {
     const today = new Date();
     const endOfMonth = new Date(today);
 
-    // Determine end date based on dateRangeOption
     if (this.dateRangeOption === 'last') {
       endOfMonth.setDate(0);
     } else if (this.dateRangeOption === 'previous') {
@@ -145,7 +140,6 @@ export class GraphComponent implements OnInit {
 
     this.EndDate = this.formatDate(endOfMonth);
 
-    // Calculate start of the month
     const startOfMonth = new Date(endOfMonth);
     startOfMonth.setMonth(endOfMonth.getMonth() - (this.selectedIteration - 1), 1);
 
@@ -157,7 +151,6 @@ export class GraphComponent implements OnInit {
     const today = new Date();
     const endOfDay = new Date(today);
 
-    // Determine end date based on dateRangeOption
     if (this.dateRangeOption === 'last') {
       endOfDay.setDate(today.getDate() - 1);
     } else if (this.dateRangeOption === 'previous') {
@@ -166,7 +159,6 @@ export class GraphComponent implements OnInit {
 
     this.EndDate = this.formatDate(endOfDay);
 
-    // Calculate start of the day
     const startOfDay = new Date(endOfDay);
     startOfDay.setDate(endOfDay.getDate() - (this.selectedIteration - 1));
 
