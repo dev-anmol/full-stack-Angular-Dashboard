@@ -15,7 +15,6 @@
 .custom-graph-topbar input {
   border: none;
   padding: 8px;
-  border-radius: 3%;
 }
 
 .error-handler {
@@ -49,14 +48,13 @@
 }
 
 #vega-chart {
-  align-self: flex-end;
-  margin-left: 100px;
+  align-self: flex-start;
 }
 
 .custom-graph {
-  justify-content: flex-end;
   margin-top: 3%;
   margin-right: 4%;
+  position: relative;
 }
 
 .row1 {
@@ -107,27 +105,35 @@
   color: rgba(0, 0, 0, 1);
 }
 
-.btn-container button:hover{
-  background-color: #abaeb0;
-}
 
 .vega-container{
   position: relative;
   width: 100%;
+  height: 100%;
 }
-.btn-container button{
-  position: absolute;
-  top: 3%;
-  right: 7%;
-  display: none;
-  z-index: 10;
+
+
+.graph-container{
+  width: 100%;
+  height: 500px;
+  overflow-x: auto;
+  overflow-y: auto;
+  display: flex;
+  position: relative;
+  margin-top: 50px;
+}
+#fullscreen-btn{
+  z-index: 1000;
+  opacity: 0;
   transition: opacity 0.3s ease;
-  background-color: #e6e8ea;
+  pointer-events: none;
+  font-size: 10px;
+  word-spacing: 5px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 10px;
+  padding-left: 10px;
 }
-.vega-container:hover button{
-  display: block;
-}
-.loading-indicator {
-  font-size: 1.5em;
-  color: #333;
+#fullscreen-btn{
+  opacity: 1;
+  pointer-events: auto;
 }

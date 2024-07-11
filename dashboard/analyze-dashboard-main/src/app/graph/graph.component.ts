@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import embed, { VisualizationSpec } from 'vega-embed';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,7 +18,7 @@ import { formatDate } from '@angular/common';
   templateUrl: './graph.component.html',
   styleUrls: ['./graph.component.css']
 })
-export class GraphComponent implements OnInit {
+export class GraphComponent implements OnInit{
   id: number = 1;
   isError: boolean = false;
   selectedGraphType: string = 'bar';
@@ -37,7 +37,7 @@ export class GraphComponent implements OnInit {
   originalWidth: number = 850;
   originalHeight: number = 400;
   showAxisName: boolean = false;
-  isErrorForm:boolean = false;
+  isErrorForm: boolean = false;
   myGlobalData: any;
   iterations: number[] = Array.from({ length: 30 }, (_, i) => i + 1);
   selectedIteration: any = 1;
@@ -49,37 +49,39 @@ export class GraphComponent implements OnInit {
   constructor(private dataService: DataService, public dialog: MatDialog, private formDataService: FormService) { }
 
   @ViewChild('vegachart') img!: ElementRef;
+  @ViewChild('fullscreen-btn') fullscreenBtn!: ElementRef;
 
-  updateAxisName(){
+
+  updateAxisName() {
     this.showAxisName = !this.showAxisName;
     this.renderGraphOnly();
   }
 
-  onDateOptionChange():void{
-    if(this.DataOption === 'Week'){
+  onDateOptionChange(): void {
+    if (this.DataOption === 'Week') {
       this.setDatesForWeek();
     }
-    if(this.DataOption === 'Month'){
+    if (this.DataOption === 'Month') {
       this.setDatesForMonth();
     }
-    if(this.DataOption === 'Year'){
+    if (this.DataOption === 'Year') {
       this.setDatesForYear();
     }
-    if(this.DataOption === 'Day'){
+    if (this.DataOption === 'Day') {
       this.setDatesForDay();
     }
-    if(this.DataOption === 'Live'){
+    if (this.DataOption === 'Live') {
       this.setDatesForLive();
     }
   }
 
-  onLiveTestCase(){
+  onLiveTestCase() {
     this.liveTestCase = !this.liveTestCase;
     console.log("live clicked", this.liveTestCase);
   }
 
-  setDatesForLive(){
-    const StartDate  = new Date();
+  setDatesForLive() {
+    const StartDate = new Date();
     const endOfDay = new Date(StartDate);
 
     this.EndDate = this.formatDate(endOfDay);
@@ -109,8 +111,8 @@ export class GraphComponent implements OnInit {
     this.updateFormData('StartDate', this.StartDate);
     this.updateFormData('EndDate', this.EndDate);
   }
-  
-  setDatesForWeek():void{
+
+  setDatesForWeek(): void {
     const today = new Date();
     const endOfWeek = new Date(today);
 
@@ -200,7 +202,7 @@ export class GraphComponent implements OnInit {
 
   resizeVegaChart(fullscreen: boolean) {
     const width = fullscreen ? window.innerWidth - 50 : this.originalWidth;
-    const height = fullscreen ? window.innerHeight - 50: this.originalHeight;
+    const height = fullscreen ? window.innerHeight - 50 : this.originalHeight;
     this.renderGraph(this.data, width, height);
   }
 
@@ -252,16 +254,16 @@ export class GraphComponent implements OnInit {
     // console.log('Filter:', item);
   }
 
-  
+
   fetchDataAndRenderGraph(): void {
     this.selectedParams = this.formDataService.getFormData();
-    console.log("parameters benchmark",this.selectedParams.selectedParameter);
+    console.log("parameters benchmark", this.selectedParams.selectedParameter);
 
     this.dataService.fetchData(this.id).subscribe(
-      (data) => {  
+      (data) => {
         this.data = data;
         this.myGlobalData = data;
-        console.log("this is the data",data);
+        console.log("this is the data", data);
         this.renderGraph(data, this.originalWidth, this.originalHeight);
       },
       (error) => {
@@ -273,18 +275,18 @@ export class GraphComponent implements OnInit {
     this.resetFields();
   }
 
-  renderGraphOnly():void{
+  renderGraphOnly(): void {
     this.renderGraph(this.myGlobalData, this.originalWidth, this.originalHeight);
   }
   fetchFormData(): any {
     const formData = { ...this.formDataService.getFormData() };
     this.dataService.sendRequestWithFormData(formData, this.id).subscribe({
-      next:(res) => {
-        if(res.recordset.length === 0){
+      next: (res) => {
+        if (res.recordset.length === 0) {
           console.log("response is empty")
-        }else{
+        } else {
           this.formDataRes = res;
-          console.log("data fetched after selecting the parameters",this.formDataRes.recordset);
+          console.log("data fetched after selecting the parameters", this.formDataRes.recordset);
           this.renderGraph(this.formDataRes.recordset, this.originalWidth, this.originalHeight);
         }
 
@@ -319,47 +321,31 @@ export class GraphComponent implements OnInit {
   }
 
   renderGraph(data: any, width: number, height: number): void {
-    console.log(this.selectedParams.selectedParameter);
+    const values = this.selectedParams.selectedParameter.map((param: any) => {
+      const dataKey = param.item_text;
+      const dataValue = data[this.id]?.[dataKey] ?? 0;
+      return { category: dataKey, amount: dataValue };
+    });
 
-      // {"category": this.selectedParams.selectedParameter[0].item_text, "amount": data[this.id]?.KW ?? 0 },
-      // { "category": this.selectedParams.selectedParameter[1].item_text, "amount": data[this.id]?.KW1 ?? 0 },
-      // { "category": this.selectedParams.selectedParameter[2].item_text, "amount": data[this.id]?.KW2 ?? 0 },
-      // { "category": this.selectedParams.selectedParameter[3].item_text, "amount": data[this.id]?.KW3 ?? 0 },
-      // { "category": this.selectedParams.selectedParameter[4].item_text, "amount": data[this.id]?.KVA ?? 0 },
-      // { "category": this.selectedParams.selectedParameter[5].item_text, "amount": data[this.id]?.KVAr ?? 0 },
-      // { "category": this.selectedParams.selectedParameter[6].item_text, "amount": data[this.id]?.KVArh ?? 0 },
-      // { "category": this.selectedParams.selectedParameter[7].item_text, "amount": data[this.id]?.KVA1 ?? 0 },
-      // { "category": this.selectedParams.selectedParameter[8].item_text, "amount": data[this.id]?.KVA2 ?? 0 },
-    
-      const values = [
-        { "category": this.selectedParams.selectedParameter[0].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[0].item_text}`] ?? 0 },
-        { "category": this.selectedParams.selectedParameter[1].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[1].item_text}`] ?? 0 },
-        { "category": this.selectedParams.selectedParameter[2].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[2].item_text}`] ?? 0 },
-        { "category": this.selectedParams.selectedParameter[3].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[3].item_text}`] ?? 0 },
-        { "category": this.selectedParams.selectedParameter[4].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[4].item_text}`] ?? 0 },
-        { "category": this.selectedParams.selectedParameter[5].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[5].item_text}`] ?? 0 },
-        { "category": this.selectedParams.selectedParameter[6].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[6].item_text}`] ?? 0 },
-        { "category": this.selectedParams.selectedParameter[7].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[7].item_text}`] ?? 0 },
-        { "category": this.selectedParams.selectedParameter[8].item_text, "amount": data[this.id][`${this.selectedParams.selectedParameter[8].item_text}`] ?? 0 },
-      ];
-      
+    const validValues = values.filter((item: any) => item.amount !== null && item.amount !== undefined && !isNaN(item.amount) && item.amount);
 
-    const validValues = values.filter(item => item.amount !== null && item.amount !== undefined && !isNaN(item.amount));
+    const chartWidth =  Math.max(this.originalWidth, validValues.length * 100);
+    const chartHeight = height;
 
     let spec: VisualizationSpec;
 
     switch (this.selectedGraphType) {
       case 'bar':
-        spec = this.getBarChartSpec(validValues, width, height);
+        spec = this.getBarChartSpec(validValues, chartWidth, chartHeight);
         break;
       case 'line':
-        spec = this.getLineChartSpec(validValues, width, height);
+        spec = this.getLineChartSpec(validValues, chartWidth, chartHeight);
         break;
       case 'pie':
         spec = this.getPieChartSpec(validValues, width, height);
         break;
       default:
-        spec = this.getBarChartSpec(validValues, width, height);
+        spec = this.getBarChartSpec(validValues, chartWidth, chartHeight);
     }
     embed('#vega-chart', spec).catch(console.error);
   }
@@ -369,7 +355,8 @@ export class GraphComponent implements OnInit {
       "$schema": "https://vega.github.io/schema/vega/v5.json",
       "width": width,
       "height": height,
-      "padding": 10,
+      "padding": { "left": 50, "right": 50, "top": 20, "bottom": 50 },
+      "autosize": {"type": "fit", "contains": "padding"},
       "background": "white",
       "data": [
         {
@@ -404,8 +391,8 @@ export class GraphComponent implements OnInit {
         }
       ],
       "axes": [
-        { "orient": "bottom", "scale": "xscale", "title": this.showAxisName ? "parameters":undefined },
-        { "orient": "left", "scale": "yscale", "title": this.showAxisName ? "value" : undefined  }
+        { "orient": "bottom", "scale": "xscale", "title": this.showAxisName ? "parameters" : undefined },
+        { "orient": "left", "scale": "yscale", "title": this.showAxisName ? "value" : undefined }
       ],
       "marks": [
         {
@@ -454,7 +441,8 @@ export class GraphComponent implements OnInit {
       "$schema": "https://vega.github.io/schema/vega/v5.json",
       "width": width,
       "height": height,
-      "padding": 10,
+      "padding": { "left": 50, "right": 50, "top": 20, "bottom": 50 },
+      "autosize": {"type": "fit", "contains": "padding"},
       "background": "white",
       "data": [
         {
@@ -487,8 +475,8 @@ export class GraphComponent implements OnInit {
         }
       ],
       "axes": [
-        { "orient": "bottom", "scale": "xscale", "title": this.showAxisName ? "parameters":undefined },
-        { "orient": "left", "scale": "yscale", "title": this.showAxisName ? "value" : undefined  }
+        { "orient": "bottom", "scale": "xscale", "title": this.showAxisName ? "parameters" : undefined },
+        { "orient": "left", "scale": "yscale", "title": this.showAxisName ? "value" : undefined }
       ],
       "marks": [
         {

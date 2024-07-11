@@ -211,23 +211,23 @@
                             <label class="date-range">Date Range</label>
                         </div>
                         <div class="col-sm-3">
-                            <select class="form-control" [(ngModel)]="dateRangeOption"
-                                (change)="onDateOptionChange()" [disabled]="liveTestCase">
+                            <select class="form-control" [(ngModel)]="dateRangeOption" (change)="onDateOptionChange()"
+                                [disabled]="liveTestCase">
                                 <option value="" style="display:none;" class="" selected="selected">Select</option>
                                 <option label="Last" value="string:Last" selected="selected">Last</option>
                                 <option label="Previous" value="string:Previous">Previous</option>
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <select class="form-control" [(ngModel)]="selectedIteration" (change)="onDateOptionChange()" [disabled]="liveTestCase">
+                            <select class="form-control" [(ngModel)]="selectedIteration" (change)="onDateOptionChange()"
+                                [disabled]="liveTestCase">
                                 <option value="" style="display: none;" selected="selected">Select</option>
                                 <option *ngFor="let Iteration of iterations" [value]="Iteration">{{Iteration}}</option>
-                                
+
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <select class="form-control" [(ngModel)]="DataOption"
-                                (change)="onDateOptionChange()">
+                            <select class="form-control" [(ngModel)]="DataOption" (change)="onDateOptionChange()">
                                 <option value="" style="display:none;" class="" selected="selected">Select</option>
                                 <option label="Live">Live</option>
                                 <option label="Day">Day</option>
@@ -257,7 +257,8 @@
                             </div>
                         </div>
                         }
-                        @if(DataOption==='Week' || DataOption==='Month' || DataOption === 'Year' || DataOption === 'Day'){
+                        @if(DataOption==='Week' || DataOption==='Month' || DataOption === 'Year' || DataOption ===
+                        'Day'){
                         <div class="row mt-lg-4">
                             <div class="col-sm-2 d-flex justify-content-end">
                                 <label class="dates-label">Start Date</label>
@@ -272,28 +273,30 @@
                                 <label class="dates-label">End Date</label>
                             </div>
                             <div class="col-sm-3 d-flex justify-content-start input-container">
-                                <input type="date" class="form-control form-select" [(ngModel)]="EndDate" [readonly]="true">
+                                <input type="date" class="form-control form-select" [(ngModel)]="EndDate"
+                                    [readonly]="true">
                             </div>
                         </div>
                         }
                         @if(DataOption==='Live'){
-                            <div class="row mt-lg-4">
-                                <div class="col-sm-2 d-flex justify-content-end">
-                                    <label class="dates-label">Start Date</label>
-                                </div>
-                                <div class="col-sm-3 d-flex justify-content-start input-container">
-                                    <input type="date" class="form-control form-select" [(ngModel)]="StartDate"
-                                        (change)="updateFormData('StartDate', StartDate)" readonly="true">
-    
-                                </div>
-                                <div class="col-sm-1"></div>
-                                <div class="col-sm-2 d-flex justify-content-end">
-                                    <label class="dates-label">End Date</label>
-                                </div>
-                                <div class="col-sm-3 d-flex justify-content-start input-container">
-                                    <input type="date" class="form-control form-select" [(ngModel)]="EndDate" [readonly]="true">
-                                </div>
+                        <div class="row mt-lg-4">
+                            <div class="col-sm-2 d-flex justify-content-end">
+                                <label class="dates-label">Start Date</label>
                             </div>
+                            <div class="col-sm-3 d-flex justify-content-start input-container">
+                                <input type="date" class="form-control form-select" [(ngModel)]="StartDate"
+                                    (change)="updateFormData('StartDate', StartDate)" readonly="true">
+
+                            </div>
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2 d-flex justify-content-end">
+                                <label class="dates-label">End Date</label>
+                            </div>
+                            <div class="col-sm-3 d-flex justify-content-start input-container">
+                                <input type="date" class="form-control form-select" [(ngModel)]="EndDate"
+                                    [readonly]="true">
+                            </div>
+                        </div>
                         }
                     </div>
                 </div>
@@ -312,19 +315,22 @@
                                 <option value="pie">Pie Chart</option>
                             </select>
                         </div>
-                        <div class="d-flex custom-entry input-group w-25">
+                        <div class="custom-entry input-group w-25">
                             <input type="text" class="form-control" placeholder="Enter Device ID" [(ngModel)]="id">
-                            <button class="btn btn-dark" type="button" (click)="fetchDataAndRenderGraph(); fetchFormData()"
-                                id="addBtn">Submit</button>
+                            <button class="btn btn-dark" type="button"
+                                (click)="fetchDataAndRenderGraph(); fetchFormData()" id="addBtn">Submit</button>
+                            <button id="fullscreen-btn" (click)="toggleFullScreen()"
+                                class="btn btn-light ml-2">FullScreen ⛶</button>
+
                         </div>
                     </div>
                 </div>
-                <div class="custom-graph vega-container d-flex justify-content-center align-items-center">
-                    <div id="vega-chart" #vegachart></div>
-                    <div class="btn-container">
-                        <button id="fullscreen-btn" (click)="toggleFullScreen()" class="btn btn-light ml-2">⛶</button>
+                <div class="graph-container" #graphContainer>
+                    <div class="vega-container">
+                        <div id="vega-chart" #vegachart></div>
                     </div>
                 </div>
+
             </div>
 
         </div>
