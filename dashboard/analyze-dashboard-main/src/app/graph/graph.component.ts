@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Renderer2 } from '@angular/core';
 import embed, { VisualizationSpec } from 'vega-embed';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -44,9 +44,10 @@ export class GraphComponent implements OnInit{
   dateRangeOption: string = '';
   liveTestCase: boolean = false;
   selectedParams: any;
+  isFullscreen:boolean = false;
 
 
-  constructor(private dataService: DataService, public dialog: MatDialog, private formDataService: FormService) { }
+  constructor(private dataService: DataService, public dialog: MatDialog, private formDataService: FormService, private renderer: Renderer2) { }
 
   @ViewChild('vegachart') img!: ElementRef;
   @ViewChild('fullscreen-btn') fullscreenBtn!: ElementRef;

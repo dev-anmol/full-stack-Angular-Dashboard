@@ -12,35 +12,38 @@ import { CommonModule } from '@angular/common';
   styleUrl: './alert.component.css'
 })
 export class AlertComponent {
-  parameterValue: any;
-  id: number = 1;
-  data: any;
-  deviceId: number = 1;
-  threshold:number = 0.0001;
-  isClicked:boolean = false;
+  parameterValue: number | null = null;
+  deviceId: number | null = null;
+  threshold: number = 0.00001;
+  isAlert: boolean = false;
+
   constructor(private alertService: AlertService, private dataService: DataService) { }
 
-  
-  fetchData(): any {
+  fetchData(): void {
+    if (this.deviceId === null) {
+      console.warn('Device ID is not set');
+      return;
+    }
+
     this.dataService.fetchData(this.deviceId).subscribe(
       (data) => {
-        this.data = data;
-        this.parameterValue = data[this.deviceId].KW;
-        console.log(this.parameterValue);
-        if (this.parameterValue) {
+        this.parameterValue = data[this.deviceId!].KW;
+        console.log('Parameter value:', this.parameterValue);
+        if (this.parameterValue !== null) {
           this.checkParameter();
         }
       },
       (error) => {
-        console.log("Error fetching data from the database", error);
-        alert('no data found in the database')
+        console.error("Error fetching data from the database", error);
+        alert('No data found in the database');
       }
-    )
+    );
   }
-  handleClick(){
-    this.isClicked = true;
-  }
+
   checkParameter(): void {
-    this.alertService.checkValue(this.parameterValue, this.threshold)
+    if (this.parameterValue !== null && this.deviceId !== null) {
+      this.isAlert = this.alertService.checkValue(this.parameterValue, this.threshold, this.deviceId);
+      console.log('Is alert:', this.isAlert);
+    }
   }
 }

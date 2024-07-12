@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: 100px;
+    margin-top: 50px;
     row-gap: 50px;
     height: fit-content;
     
@@ -20,7 +20,7 @@ p{
 .threshold{
     background-color: #272727;
     color: aliceblue;
-    padding: 20px;
+    padding: 10px;
     border-radius: 20px;
     cursor: pointer;
 }
@@ -34,4 +34,120 @@ p{
 .threshold:hover{
     background-color: #403f3f;
 }
+:root {
+    --background: #1A202C;
+    --foreground: #E2E8F0;
+    --primary: #68D391;
+    --border: #2D3748;
+    --input: #2D3748;
+    --ring: #4299E1;
+    --primary-foreground: #1A202C;
+    --secondary: #F6E05E;
+    --secondary-foreground: #1A202C;
+    --accent: #ED64A6;
+    --accent-foreground: #1A202C;
+    --destructive: #F56565;
+    --destructive-foreground: #1A202C;
+    --muted: #CBD5E0;
+    --muted-foreground: #1A202C;
+    --card: #2D3748;
+    --card-foreground: #E2E8F0;
+    --popover: #2D3748;
+    --popover-foreground: #E2E8F0;
+  }
 
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  .bg-green-100 {
+    background-color: #F0FFF4;
+  }
+
+  .border-green-400 {
+    border-color: #9AE6B4;
+  }
+
+  .text-green-700 {
+    color: #2F855A;
+  }
+
+  .bg-yellow-100 {
+    background-color: #FFFBEB;
+  }
+
+  .border-yellow-400 {
+    border-color: #F6E05E;
+  }
+
+  .text-yellow-700 {
+    color: #B7791F;
+  }
+
+  .bg-red-100 {
+    background-color: #FFF5F5;
+  }
+
+  .border-red-400 {
+    border-color: #FEB2B2;
+  }
+
+  .text-red-700 {
+    color: #C53030;
+  }
+
+  .circle{
+    background-color: #272727;
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    display: inline-block;
+    margin-left: 10px;
+  }
+  .dev-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 10px;
+  }
+  .dev-main-container{
+    display: flex;
+    align-items: center;
+    height: 100px;
+    justify-content: space-between;
+    position: relative;
+  }
+  .circle-alert-red{
+    background-color: rgb(229, 42, 42);
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    display: inline-block;
+    margin-left: 10px;
+    position: absolute;
+    right: 20px;
+    top: 5px;
+  }
+  .circle-alert-green{
+    background-color: rgb(65, 226, 53);
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    display: inline-block;
+    margin-left: 10px;
+    position: absolute;
+    top: 5px;
+    right: 50px;
+
+  }
+  .alert-value-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4px;
+    height: 80px;
+    margin-left: 10px;
+    row-gap: 18px;
+
+  }

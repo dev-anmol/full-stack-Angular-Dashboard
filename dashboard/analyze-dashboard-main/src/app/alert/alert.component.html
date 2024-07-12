@@ -1,27 +1,60 @@
 <div class="container">
-    <div class="first-container">
-        <p>DeviceId</p>
-        <input type="text" [(ngModel)]="deviceId" class="rounded-3 form-control" style="height: fit-content;">
-        <div>
-            <button (click)="fetchData(); handleClick()" class="btn btn-primary rounded-3"
-                style="height: fit-content;">Submit</button>
-        </div>
+  <div class="first-container">
+    <p>DeviceId</p>
+    <input
+      type="text"
+      [(ngModel)]="deviceId"
+      class="rounded-3 form-control"
+      style="height: fit-content"
+    />
+    <div>
+      <button
+        (click)="fetchData()"
+        class="btn btn-primary rounded-3"
+        style="height: fit-content"
+      >
+        Submit
+      </button>
     </div>
+  </div>
 
-    <div class="second-container">
-        <div class="w-25">
-            <p class="threshold">Threshold Value - {{threshold}}</p>
-        </div>
-        <div>
-            @if(isClicked){
-            <p>
-                Received Value - {{parameterValue}}
-            </p>
-            }@else {
-            <span style="display: none;"></span>
-            }
-        </div>
+  <div class="second-container">
+    <div class="w-25">
+      <p class="threshold">Threshold Value - {{ threshold }}</p>
     </div>
+  </div>
 </div>
 
-<!-- Recieved Value - {{data[this.deviceId].KW}} -->
+<div class="alert-container-parent">
+  <div class="bg-light rounded-4 w-75 d-flex mx-5 mt-lg-5 dev-main-container">
+    <div class="dev-container">
+      <div>
+        <p>Device Id</p>
+      </div>
+      <div>
+        <p>Recieved Val</p>
+      </div>
+    </div>
+    <div class="alert-value-container">
+      <div>
+        <span>{{ deviceId }}</span>
+      </div>
+      <div>
+        <span>{{ parameterValue }}</span>
+      </div>
+    </div>
+
+    <div>
+      @if(deviceId){ 
+        
+        @if(isAlert){
+      <span class="circle-alert-red"></span>
+      }@else{
+      <span class="circle-alert-green"></span>
+      <span class="circle-alert-red"></span>
+      @if(isAlert===false){
+      <span class="circle-alert-green"></span>
+      } } }
+    </div>
+  </div>
+</div>
