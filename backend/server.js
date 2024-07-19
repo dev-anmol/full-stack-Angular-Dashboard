@@ -1,4 +1,4 @@
-const express = require('express');
+    const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const sql = require('mssql/msnodesqlv8');
@@ -22,8 +22,8 @@ const config = {
         encrypt: true,
         trustServerCertificate: true,
         enableArithAbort: true,
-        connectonTimeout: 300000,
-        requestTimeout: 300000
+        connectonTimeout: 15000,  //sets the amount of time to wait while trying to establish a connection before aborting the attempt and generating an error.
+        requestTimeout: 300000   //sets the amount of time to wait for a query to complete before aborting the request and generating an error.
 
     },
     pool: {
@@ -71,6 +71,45 @@ app.get('/data-energy', async (req, res) => {
     }
 });
 
+app.get('/plotBy/:id', async (req, res) => {
+    const plotBy = req.query.plotBy;
+    const deviceId = req.params.id;
+
+    let query = '';
+    if (plotBy === 'Day') {
+        query = 'select * from Data_Energy_Daily where DeviceId = @deviceId AND DATEPART(year, AggregatedReadingDateTime) = 2024 AND DATEPART(month, AggregatedReadingDateTime) = 4';
+    } else if (plotBy === 'Hour') {
+        query = 'select * from Data_Energy_Hourly where DeviceId = @deviceId AND DATEPART(year, AggregatedReadingDateTime) = 2024 AND DATEPART(month, AggregatedReadingDateTime) = 4';
+    } else if (plotBy === '15 Minutes') {
+        query = 'select * from Data_Energy_Fifteen_Minutes where DeviceId = @deviceId AND DATEPART(year, AggregatedReadingDateTime) = 2024 AND DATEPART(month, AggregatedReadingDateTime) = 4';
+    } else if(plotBy === 'Live'){
+        query = 'select * from Data_Energy_Daily where DeviceId = @deviceId AND DATEPART(year, AggregatedReadingDateTime) = 2024 AND DATEPART(month, AggregatedReadingDateTime) = 4';
+    }
+    else {
+        res.status(400).json({
+            msg: 'Invalid plotBy value'
+        });
+        return;
+    }
+    try {
+        const result = await pool.request()
+          .input('deviceId', sql.Int, deviceId)
+          .query(query);
+        console.log('Query executed, rows returned:', result.recordset.length);
+        if (result.recordset.length === 0) {
+          throw new Error('No Data found in the database');
+        }
+        res.status(200).send(result.recordset);
+      } catch (err) {
+        console.error('Error fetching the data from the database', err);
+        res.status(404).json({
+          msg: err.message,
+        });
+      }
+});
+
+
+
 app.get('/data-energy/:id', async (req, res) => {
     const deviceId = req.params.id;
     try {
@@ -98,8 +137,9 @@ app.get('/form-data/:id', async (req, res) => {
             "StartDate": req.query.StartDate,
             "EndDate": req.query.EndDate,
         }
+
         const parameter = {
-           'A': req.query['A'],
+            'A': req.query['A'],
             'An': req.query['An'],
             'Ag': req.query['Ag'],
             'A1': req.query['A1'],
@@ -154,6 +194,11 @@ app.get('/form-data/:id', async (req, res) => {
             'KVARh_Recieved': req.query['KVARh_Recieved'],
             'KVAh_Recieved': req.query['KVAh_Recieved']
         }
+        let hoursParameter = [];
+
+        if (req.query.selectedHours) {
+            hoursParameter = JSON.parse(req.query.selectedHours);
+        }
 
         const selectedParams = Object.keys(parameter).filter(key => parameter[key] !== undefined);
 
@@ -161,13 +206,23 @@ app.get('/form-data/:id', async (req, res) => {
             return res.status(400).send('No parameter selected');
         }
         const selectClause = selectedParams.map(param => `[${param}]`).join(', ');
+
+        const selectHourClause = hoursParameter.map(hour => `DATEPART(HOUR, ReadingDateTime) = ${hour.id}`).join(' OR ');
+
+        console.log(selectHourClause);
+        if (selectHourClause) {
+            console.log(selectHourClause);
+        }
+
         const sqlQuery = `
-        SELECT ${selectClause} 
+        SELECT ${selectClause}
         FROM Data_Energy 
         WHERE DeviceId = @deviceId 
           AND CAST(ReadingDateTime AS DATE) >= @StartDate 
           AND CAST(ReadingDateTime AS DATE) <= @EndDate
     `;
+        // ${selectHourClause ? `AND (${selectHourClause})` : ''}
+
         const result = await pool.request()
             .input('StartDate', sql.Date, formData.StartDate)
             .input('EndDate', sql.Date, formData.EndDate)
@@ -179,7 +234,6 @@ app.get('/form-data/:id', async (req, res) => {
         if (result.recordset.length === 0) {
             throw new Error('No Data Found in the Database');
         }
-        console.log(result);
         res.status(200).send(result);
 
     } catch (error) {

@@ -25,10 +25,10 @@ export class AlertService {
     if (this.checkThreshold(value, threshold)) {
       const audio = this.alertSounds[deviceId];
       if (audio) {
-        audio.play().catch(error => console.error('Error playing audio:', error));
+        audio.play().catch(error => console.error('Error playing the audio', error));
         return true;
       } else {
-        console.warn(`No audio found for device ID ${deviceId}`);
+        console.error(`No audio found for the DeviceId ${deviceId}`);
       }
     }
     return false;

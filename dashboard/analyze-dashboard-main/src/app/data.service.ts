@@ -5,29 +5,31 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DataService {
   private cache = new Map<number, Observable<any>>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   fetchData(id: number): Observable<any> {
     if (!this.cache.has(id)) {
-      const data$ = this.http.get<any>(`http://localhost:3000/data-energy/${id}`).pipe(
-        map(data => this.transformData(data)),
-        catchError(error => {
-          console.error('Error fetching data from backend', error);
-          return of(null);
-        }),
-        shareReplay(1)
-      );
+      const data$ = this.http
+        .get<any>(`http://localhost:3000/data-energy/${id}`)
+        .pipe(
+          map((data) => this.transformData(data)),
+          catchError((error) => {
+            console.error('Error fetching data from backend', error);
+            return of(null);
+          }),
+          shareReplay(1)
+        );
       this.cache.set(id, data$);
     }
     return this.http.get<any>(`http://localhost:3000/data-energy/${id}`);
   }
-  sendRequestWithFormData(formData: any, id:number): Observable<any> {
-    let parameters;
+  sendRequestWithFormData(formData: any, id: number): Observable<any> {
+    
     let params = new HttpParams()
       .set('view', formData.view)
       .set('analysisType', formData.analysisType)
@@ -54,21 +56,37 @@ export class DataService {
       .set('sGraphType', formData.SgraphType)
       .set('sPlotAxis', formData.SPlotAxis)
       .set('kFacility', formData.KFacility)
-      .set('kpi', formData.Kpi)
-    console.log("Params",params);
-    console.log("benchmark Parameters", formData.selectedParameter);
-    parameters = formData.selectedParameter;    
-    if(parameters){
-      parameters.forEach((item:any)=>{
+      .set('kpi', formData.Kpi);
+
+    if (formData.selectedParameter) {
+      formData.selectedParameter.forEach((item: any) => {
         params = params.set(item.item_text, item.item_text);
-      })  
-      console.log("params after setting values", params)   
-    }else{
-      console.log("Please select the parameters");
-      alert('Please select the parameters');
+      });
+    } else {
+      console.log('Please select the parameters');
     }
 
-    return this.http.get<any>(`http://localhost:3000/form-data/${id}`, { params });
+    // Add additional parameters for selectedHours
+    if (formData.selectedHours) {
+      formData.selectedHours.forEach((hour: any, index: number) => {
+        params = params.set(`hour${index + 1}`, JSON.stringify(hour));
+      });
+    }
+
+    console.log('MY FINAL PARAMETERS - ', params);
+
+    return this.http.get<any>(`http://localhost:3000/form-data/${id}`, {
+      params,
+    });
+  }
+
+  sendRequestwithPlotBy(formData: any, id:number): Observable<any> {
+    let params = new HttpParams().set('plotBy', formData.plotBy);
+    console.log('PlotBy parameter', params.toString());
+    console.log('Full URL:', `http://localhost:3000/plotBy/${id}?${params.toString()}`);
+    return this.http.get<any>(`http://localhost:3000/plotBy/${id}`,{
+      params
+    })
   }
 
   private transformData(data: any): any {

@@ -133,10 +133,12 @@
 
 .graph-container{
   width: 100%;
-  height: 500px;
+  height: 100%;
   overflow-x: auto;
   overflow-y: auto;
   display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
   margin-top: 50px;
 }
@@ -146,10 +148,4 @@
   pointer-events: auto;
 }
 
-.alert-container-parent{
-  display: flex;
-  background-color: rgb(34, 34, 34);
-  width: 100vw;
-  height: 400px;
-}
 

@@ -139,7 +139,6 @@ p{
     position: absolute;
     top: 5px;
     right: 50px;
-
   }
   .alert-value-container{
     display: flex;
@@ -149,5 +148,4 @@ p{
     height: 80px;
     margin-left: 10px;
     row-gap: 18px;
-
   }
