@@ -109,7 +109,6 @@ app.get('/plotBy/:id', async (req, res) => {
 });
 
 
-
 app.get('/data-energy/:id', async (req, res) => {
     const deviceId = req.params.id;
     try {
@@ -217,7 +216,7 @@ app.get('/form-data/:id', async (req, res) => {
         const sqlQuery = `
         SELECT ${selectClause}
         FROM Data_Energy 
-        WHERE DeviceId = @deviceId 
+        WHERE DeviceId = @deviceId
           AND CAST(ReadingDateTime AS DATE) >= @StartDate 
           AND CAST(ReadingDateTime AS DATE) <= @EndDate
     `;

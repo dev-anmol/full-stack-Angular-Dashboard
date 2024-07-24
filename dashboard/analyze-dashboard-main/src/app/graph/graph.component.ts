@@ -10,8 +10,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogContentComponent } from '../dialog-content/dialog-content.component';
 import { FormService } from '../form.service';
 import { formatDate } from '@angular/common';
-import { error } from 'vega';
-import { partLayerMixins } from 'vega-lite/build/src/compositemark/common';
 
 @Component({
   selector: 'app-graph',
@@ -373,31 +371,24 @@ export class GraphComponent implements OnInit {
     }
     this.formDataService.setFormData(formData);
   }
-
   onGraphTypeChange(): void {
     this.fetchDataAndRenderGraph();
   }
   renderPlotByGraph(data: any[], width: number, height: number): void {
     const totalplotByParameters = Object.keys(data[0]);
     console.log('Total parameters:', totalplotByParameters);
-
-    // Assuming the first two parameters are not needed for the chart as 1st two are id and deviceId
     
     const excludeKeys = ["NoOfRecords","MinReadingDateTime","DeviceId","Id", "AggregatedReadingDateTime","MaxReadingDateTime", "CreateDateTime"];
 
     const plotByParameters = totalplotByParameters.filter(key => !excludeKeys.includes(key));
-  
-    console.log('PlotBy parameters:', plotByParameters);
 
-    // Create the values array for Vega
     let values = data.flatMap((item) =>
       plotByParameters.map((param) => ({
         category: param,
         amount: parseFloat(item[param]),
       }))
     );
-
-    const sampleSize = 150;
+    const sampleSize = 100;
     if (values.length > sampleSize) {
       const samplingInterval = Math.floor(values.length / sampleSize);
       values = values.filter((_, index) => index % samplingInterval === 0);
@@ -413,16 +404,11 @@ export class GraphComponent implements OnInit {
     );
 
     console.log("valid Values render plot by", validValues);
-
-    // Determine chart dimensions
     const chartWidth = this.isFullscreen
       ? width
       : Math.max(this.originalWidth, validValues.length * 100);
     const chartHeight = height;
-
-    // Select the appropriate chart specification based on the selectedGraphType
     let spec: VisualizationSpec;
-
     switch (this.selectedGraphType) {
       case 'bar':
         spec = this.getBarChartSpec(validValues, chartWidth, chartHeight);
@@ -436,10 +422,7 @@ export class GraphComponent implements OnInit {
       default:
         spec = this.getBarChartSpec(validValues, chartWidth, chartHeight);
     }
-
-    // Render the chart
     embed('#vega-chart', spec).catch(console.error);
-
   }
 
   renderGraph(data: any, width: number, height: number): void {
